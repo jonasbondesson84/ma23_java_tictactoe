@@ -1,20 +1,14 @@
 import java.util.ArrayList;
 
 public class Board {
-    private ArrayList<String> board = new ArrayList<>();
+    String[] boardArray;
+    private int numbersOfRows;
+    private int numbersOfSquares;
 
-    private int numbersOfSquares=9;
-
-    public Board( int numbersOfSquares) {
-        this.numbersOfSquares = numbersOfSquares;
-    }
-
-    public ArrayList<String> getBoard() {
-        return board;
-    }
-
-    public void setBoard(ArrayList<String> board) {
-        this.board = board;
+    public Board(int numbersOfRows) {
+        this.numbersOfRows = numbersOfRows;
+        this.numbersOfSquares = numbersOfRows * numbersOfRows;
+        this.boardArray = new String[numbersOfRows*numbersOfRows];
     }
 
     public int getNumbersOfSquares() {
@@ -25,17 +19,21 @@ public class Board {
         this.numbersOfSquares = numbersOfSquares;
     }
 
+    public void fillList() {
+        for(int i = 0; i<numbersOfSquares; i++) {
+            boardArray[i] = " ";
+        }
+
+    }
     public void printBoard() {
         for (int i = 1; i <= numbersOfSquares; i++) {
-            System.out.print(" x " + (i % Math.sqrt(numbersOfSquares) !=0 ? "|" : ""));
-            if (i % Math.sqrt(numbersOfSquares) == 0 && i<numbersOfSquares) {
-                System.out.println();
-                for (int j = 1; j <= Math.sqrt(numbersOfSquares); j++) {
-                    System.out.print("---" + (j < Math.sqrt(numbersOfSquares) ? "+" : ""));
+            System.out.print(" " + boardArray[i-1] + " " + (i % numbersOfRows != 0 ? "|" : "\n")); //Prints players marks + vertical borders
+            if (i % numbersOfRows == 0 && i < numbersOfSquares) {
+                for (int j = 1; j <= numbersOfRows; j++) { // prints horizontal borders
+                    System.out.print("---" + (j < numbersOfRows ? "+" : "\n"));
                 }
-                System.out.println();
-
             }
         }
     }
+
 }

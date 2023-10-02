@@ -6,19 +6,21 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
         String nextMark;
-        int numberOfBoardTiles;
+        String checkInput="0";
+        int numberOfRowsTiles;
         ArrayList<Player> players = new ArrayList<>();
         boolean win=false;
 
         System.out.println("Välkommen till TRE-I-RAD!");
-        System.out.println("Detta är ett spel för två spelare, det gäller att få tre likadana tecken i rad.");
+        System.out.println("Detta är ett spel för två spelare, man vinner om man får tre likadana tecken i rad.");
         System.out.println("Raderna kan vara horisontella, vertikala samt diagonala.\n");
 
         System.out.println("Hur många rutor (vertikalt) ska spelplanen ha");
-        numberOfBoardTiles= sc.nextInt();
-        Board playerBoard = new Board((numberOfBoardTiles*numberOfBoardTiles));
+        numberOfRowsTiles = sc.nextInt();
+        //numberOfBoardTiles= Integer.parseInt(checkInput);
+        Board playerBoard = new Board(numberOfRowsTiles);
         sc.nextLine();
-        //System.out.println(playerBoard.);
+        playerBoard.fillList();
 
         System.out.println("Ange namnet på den första spelaren:");
         players.add(new Player(sc.nextLine()));
