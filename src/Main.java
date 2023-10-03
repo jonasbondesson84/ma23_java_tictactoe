@@ -7,6 +7,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         String nextMark;
         String checkInput="0";
+        String winner = "";
         int numberOfRowsTiles;
         ArrayList<Player> players = new ArrayList<>();
         boolean win=false;
@@ -34,10 +35,16 @@ public class Main {
         while(!win) {
             for (Player player : players) {
                 win = player.playerTurn(playerBoard);
+                if(win) {
+                    player.setNumberOfWins(player.getNumberOfWins() + 1);
+                    winner = player.getName();
+                    break;
+                }
             }
 
 
         }
+        System.out.println("Vinnare är " + winner);
 
 //        for(Player player : players) {
 //            System.out.println(player.getName());
