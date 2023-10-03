@@ -23,20 +23,21 @@ public class Main {
         playerBoard.fillList();
 
         System.out.println("Ange namnet på den första spelaren:");
-        players.add(new Player(sc.nextLine()));
+        players.add(new Player(sc.nextLine(), "x"));
         System.out.println("Ange namnet på den andra spelaren:");
-        players.add(new Player(sc.nextLine()));
+        players.add(new Player(sc.nextLine(), "o"));
         playerBoard.printBoard();
+        for(Player player :players) {
+            player.playerTurn(playerBoard);
+        }
 
-//        while(!win) {
-//            for (Player player : players) {
-//                player.playerTurn();
-//                playerBoard.printBoard();
-//                win = player.checkIfWin();
-//            }
-//
-//
-//        }
+        while(!win) {
+            for (Player player : players) {
+                win = player.playerTurn(playerBoard);
+            }
+
+
+        }
 
 //        for(Player player : players) {
 //            System.out.println(player.getName());
