@@ -4,11 +4,25 @@ public class Board {
     private String[][] boardArray;
     private int numbersOfRows;
     private int numbersOfSquares;
+    private int numberToWin;
 
     public Board(int numbersOfRows) {
         this.numbersOfRows = numbersOfRows;
         this.numbersOfSquares = numbersOfRows * numbersOfRows;
         this.boardArray = new String[numbersOfRows][numbersOfRows];
+        if(numbersOfRows <= 5) {
+            this.numberToWin = numbersOfRows;
+        } else {
+            this.numberToWin = 5;
+        }
+    }
+
+    public int getNumberToWin() {
+        return numberToWin;
+    }
+
+    public void setNumberToWin(int numberToWin) {
+        this.numberToWin = numberToWin;
     }
 
     public int getNumbersOfRows() {

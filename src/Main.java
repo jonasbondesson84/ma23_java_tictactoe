@@ -22,24 +22,37 @@ public class Main {
         Board playerBoard = new Board(numberOfRowsTiles);
         sc.nextLine();
         playerBoard.fillList();
+        System.out.println("Brädet kommer nu vara " + playerBoard.getNumbersOfRows() + "x" + playerBoard.getNumbersOfRows() + " rutor.");
+        System.out.println("Det krävs " + playerBoard.getNumberToWin() + " i rad för att vinna.");
 
         System.out.println("Ange namnet på den första spelaren:");
         players.add(new Player(sc.nextLine(), "x"));
         System.out.println("Ange namnet på den andra spelaren:");
         players.add(new Player(sc.nextLine(), "o"));
         playerBoard.printBoard();
-        for(Player player :players) {
-            player.playerTurn(playerBoard);
-        }
-
+//        for(Player player :players) {
+//            player.playerTurn(playerBoard);
+//        }
+        int numbersOfTurns=0;
         while(!win) {
+
             for (Player player : players) {
+
+                numbersOfTurns++;
+                System.out.println(numbersOfTurns);
+                System.out.println(playerBoard.getNumbersOfRows()*playerBoard.getNumbersOfRows());
                 win = player.playerTurn(playerBoard);
                 if(win) {
                     player.setNumberOfWins(player.getNumberOfWins() + 1);
                     winner = player.getName();
                     break;
+                } else if(numbersOfTurns == (playerBoard.getNumbersOfRows()* playerBoard.getNumbersOfRows())) {
+                    System.out.println("Det blev oavgjort.");
+                    win=true;
+                    break;
                 }
+
+
             }
 
 

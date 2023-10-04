@@ -29,7 +29,7 @@ public class Player {
     }
 
     public boolean playerTurn(Board playerBoard) {
-
+     //   markBoard(playerBoard);
         String answerFull;
 
         int rowIndex = 0;
@@ -45,7 +45,7 @@ public class Player {
 
             rowIndex = playerBoard.getRow(answerFull.charAt(0)) - 1;
             colIndex = Character.getNumericValue(answerFull.charAt(1)) - 1;
-            if (rowIndex < playerBoard.getNumbersOfRows() && colIndex < playerBoard.getNumbersOfRows()) { //Kollar om rutan finns.
+            if (rowIndex < playerBoard.getNumbersOfRows() && colIndex < playerBoard.getNumbersOfRows()) { //Kollar om rutan är inom spelplanen.
                 if (playerBoard.getBoardArray()[rowIndex][colIndex].equalsIgnoreCase(" ")) { //Kollar så att rutan är ledig.
                     playerBoard.setBoardArrayElement(rowIndex, colIndex, mark);
                     addedMark = true;
@@ -57,31 +57,92 @@ public class Player {
             }
         }
         playerBoard.printBoard(); //Skriver ut brädet
-        boolean check = checkIfWin(rowIndex, colIndex, playerBoard, mark);
-        System.out.println(check);
-        return check; //Kollar om någon har vunnit
 
+        return checkIfWin(rowIndex, colIndex, playerBoard, mark); //Kollar om någon har vunnit
 
 
     }
 
-    public boolean checkIfWin( int lastMarkRow, int lastMarkCol, Board playerBoard, String mark) {
-        int numbersInRow = 0;
-        int numbersInCol = 0;
-        System.out.println(mark);
-        for(int i = 0; i < playerBoard.getNumbersOfRows(); i++) {
-            if(playerBoard.getBoardArrayElement(lastMarkRow, i).equalsIgnoreCase(mark)) {
-                numbersInRow++;
-            }
-            if(playerBoard.getBoardArrayElement(i, lastMarkCol).equalsIgnoreCase(mark)) {
-                numbersInCol++;
-            }
+    public boolean checkIfWin(int lastMarkRow, int lastMarkCol, Board playerBoard, String mark) {
 
+        if (checkIfWinRow(playerBoard, lastMarkRow) || checkIfWinCol(playerBoard, lastMarkCol)) {
+            return true;
+        } else {
+            return checkIfWinDiagonally(playerBoard, lastMarkRow,lastMarkCol);
+        }
+    }
+
+    public boolean checkIfWinRow(Board playerBoard, int lastMarkRow) {
+        int numbersInRow = 0;
+        for (int i = 0; i < playerBoard.getNumbersOfRows(); i++) {  //Kollar ifall man har tillräckligt för att vinna i den raden man senast spelade.
+            if (playerBoard.getBoardArrayElement(lastMarkRow, i).equalsIgnoreCase(mark)) {
+                numbersInRow++;
+                if (numbersInRow >= playerBoard.getNumberToWin()) {
+                    return true;
+                }
+            } else {
+                numbersInRow = 0;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkIfWinCol(Board playerBoard, int lastMarkCol) {
+        int numbersInCol = 0;
+        for (int i = 0; i < playerBoard.getNumbersOfRows(); i++) {  //Kollar ifall man har tillräckligt för att vinna i den kolumnen man senast spelade.
+            if (playerBoard.getBoardArrayElement(i, lastMarkCol).equalsIgnoreCase(mark)) {
+                numbersInCol++;
+                if (numbersInCol >= playerBoard.getNumberToWin()) {
+                    return true;
+                }
+            } else { //om nästa
+                numbersInCol = 0;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkIfWinDiagonally(Board playerBoard, int lastMarkRow, int lastMarkCol) {
+        int numbersInDiagonally = 1;
+        int markRow = lastMarkRow-1;
+        int markCol = lastMarkCol-1;
+        while ((markRow >= 0 && markCol >= 0) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)){
+            numbersInDiagonally++;
+            markRow--;
+            markCol--;
+        }
+        markRow = lastMarkRow+1;
+        markCol = lastMarkCol+1;
+        while ((markRow < playerBoard.getNumbersOfRows() && markCol < playerBoard.getNumbersOfRows()) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)) {
+
+            numbersInDiagonally++;
+            markRow++;
+            markCol++;
+        }
+        if(numbersInDiagonally >= playerBoard.getNumberToWin()) {
+            return true;
+        } else {
+            numbersInDiagonally = 1;
+            markRow = lastMarkRow-1;
+            markCol = lastMarkCol+1;
+            while ((markRow >= 0 && markCol < playerBoard.getNumbersOfRows()) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)){
+                numbersInDiagonally++;
+                markRow--;
+                markCol++;
+            }
+            markRow = lastMarkRow+1;
+            markCol = lastMarkCol-1;
+            while ((markRow < playerBoard.getNumbersOfRows() && markCol >= 0) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)) {
+
+                numbersInDiagonally++;
+                markRow++;
+                markCol--;
+            }
 
         }
-
-        return (numbersInCol == 3 || numbersInRow == 3);
+        return (numbersInDiagonally >= playerBoard.getNumberToWin());
 
 
     }
+
 }
