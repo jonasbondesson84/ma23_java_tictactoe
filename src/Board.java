@@ -129,4 +129,14 @@ public class Board {
         return columnNumbers;
     }
 
+    public boolean checkIfBoardIsFull() {
+        for (int i = 0; i < numbersOfRows; i++) {
+            for (int j = 0; j < numbersOfRows; j++) {
+                if(getBoardArrayElement(i,j).equalsIgnoreCase(" ")) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

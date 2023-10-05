@@ -34,12 +34,11 @@ public class GameMode {
 
             winnerOrDraw = false; //resets before new game
             playerBoard.resetBoard();
-            int numbersOfTurns = 0;
 
             playerBoard.printBoard();
 
             while (!winnerOrDraw) { //Players keeps playing until one has won or it is a draw
-                winnerOrDraw = gameTurn(numbersOfTurns, playerBoard, difficulty);
+                winnerOrDraw = gameTurn(playerBoard, difficulty);
             }
 
             printScores(players);
@@ -90,12 +89,11 @@ public class GameMode {
 
             winnerOrDraw = false; //resets all before new game
             playerBoard.resetBoard();
-            int numbersOfTurns = 0;
 
             playerBoard.printBoard();
 
             while (!winnerOrDraw) {  //Players keeps playing until one has won or it is a draw
-                winnerOrDraw = gameTurn(numbersOfTurns, playerBoard, 0); //only uses difficulty in single player mode.
+                winnerOrDraw = gameTurn( playerBoard, 0); //only uses difficulty in single player mode.
             }
 
             printScores(players);
@@ -105,7 +103,7 @@ public class GameMode {
 
     public void printScores(ArrayList<Player> players) {
         for (Player player : players) {
-            player.printScore();
+            player.printPlayerScore();
         }
         System.out.println(Board.getNumbersOfDraw() + (Board.getNumbersOfDraw() == 1 ? " omgång blev oavgjord" : " omgångar blev oavgjorda"));
     }
@@ -123,11 +121,11 @@ public class GameMode {
         }
     }
 
-    public boolean gameTurn(int numbersOfTurns, Board playerBoard, int difficulty) {
+    public boolean gameTurn( Board playerBoard, int difficulty) {
+
         boolean winnerOrDraw = false;
          //Players keeps playing until one has won or it is a draw
             for (Player player : players) {
-                numbersOfTurns++;
                 if(getGameMode().equalsIgnoreCase("single-player") && players.get(1) == player) {
                     winnerOrDraw = player.computerTurn(playerBoard, difficulty);
                 } else {
@@ -137,7 +135,7 @@ public class GameMode {
                     player.setNumberOfWins(player.getNumberOfWins() + 1);
                     System.out.println("Vinnare är " + player.getName());
                     break;
-                } else if (numbersOfTurns == (playerBoard.getNumbersOfRows() * playerBoard.getNumbersOfRows())) {
+                } else if (playerBoard.checkIfBoardIsFull()) {
                     System.out.println("Det blev oavgjort.");
                     Board.setNumbersOfDraw(Board.getNumbersOfDraw()+1);
                     winnerOrDraw = true;
@@ -147,5 +145,7 @@ public class GameMode {
             return winnerOrDraw;
 
     }
+
+
 
 }

@@ -69,7 +69,7 @@ public class Player {
             playerBoard.setBoardArrayElement(rowIndex, colIndex, mark);
             playerBoard.printBoard();
         } else if (difficulty == 2){
-            
+
         }
         return checkIfWin(rowIndex, colIndex, playerBoard); //Checks if someone has won.
     }
@@ -155,7 +155,7 @@ public class Player {
         return (numbersInDiagonally >= playerBoard.getNumberToWin());
     }
 
-    public void printScore() {
+    public void printPlayerScore() {
         System.out.println(name + " har " + numberOfWins + (numberOfWins == 1 ? " vinst" : " vinster"));
     }
 }
