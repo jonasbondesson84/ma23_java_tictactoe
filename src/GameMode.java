@@ -2,19 +2,49 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GameMode {
-    ArrayList<Player> players = new ArrayList<>();
-    //    private ArrayList<Player> players = new ArrayList<>();
+    private String GameMode;
+    private ArrayList<Player> players = new ArrayList<>();
+
     Scanner sc = new Scanner(System.in);
 
+    public void setGameMode(String gameMode) {
+        GameMode = gameMode;
+    }
+    public String getGameMode() {
+        return GameMode;
+    }
+
     public void singlePlayer() {
-        boolean keepPlaying = true;
+
         int difficulty;
-        System.out.println("Välkommen till spelet mot dator. Vi börjar med att ställa in svårighetsgrad.");
-        do {
+        players.clear();
+        boolean winnerOrDraw;
+        Board.setNumbersOfDraw(0);
+        boolean playAgain = true;
+        Board playerBoard = new Board();
+        System.out.println("Välkommen till single player läget!");
+        System.out.println("Ange namnet på spelaren:");
+
+        players.add(new Player(sc.nextLine(), "x"));
+        System.out.println("Välkommen " + players.get(0).getName() + "! Du kommer spela mot Marvin.");
+        players.add(new Player("Marvin", "o"));
+        while (playAgain) {
             difficulty = setDifficulty();
+            playerBoard.setBoardSize();  //Sets the board size with method
 
+            winnerOrDraw = false; //resets before new game
+            playerBoard.resetBoard();
+            int numbersOfTurns = 0;
 
-        } while (keepPlaying);
+            playerBoard.printBoard();
+
+            while (!winnerOrDraw) { //Players keeps playing until one has won or it is a draw
+                winnerOrDraw = gameTurn(numbersOfTurns, playerBoard, difficulty);
+            }
+
+            printScores(players);
+            playAgain = askToPlayAgain();
+        }
 
 
     }
@@ -46,8 +76,8 @@ public class GameMode {
 
     public void multiPlayer() {
         players.clear();
+        Board.setNumbersOfDraw(0);
         boolean winnerOrDraw;
-        String answer;
         boolean playAgain = true;
         Board playerBoard = new Board();
 
@@ -58,46 +88,64 @@ public class GameMode {
         while (playAgain) {
             playerBoard.setBoardSize();  //Sets the board size with method
 
-            System.out.println("Brädet kommer nu vara " + playerBoard.getNumbersOfRows() + "x" + playerBoard.getNumbersOfRows() + " rutor.");
-            System.out.println("Det krävs " + playerBoard.getNumberToWin() + " i rad för att vinna.");
-
-            winnerOrDraw = false;
+            winnerOrDraw = false; //resets all before new game
             playerBoard.resetBoard();
             int numbersOfTurns = 0;
 
             playerBoard.printBoard();
 
-            while (!winnerOrDraw) { //Players keeps playing until one has won or it is a draw
-                for (Player player : players) {
-                    numbersOfTurns++;
-                    winnerOrDraw = player.playerTurn(playerBoard);
-                    if (winnerOrDraw) {
-                        player.setNumberOfWins(player.getNumberOfWins() + 1);
-                        System.out.println("Vinnare är " + player.getName());
-                        break;
-                    } else if (numbersOfTurns == (playerBoard.getNumbersOfRows() * playerBoard.getNumbersOfRows())) {
-                        System.out.println("Det blev oavgjort.");
-                        winnerOrDraw = true;
-                        break;
-                    }
-                }
+            while (!winnerOrDraw) {  //Players keeps playing until one has won or it is a draw
+                winnerOrDraw = gameTurn(numbersOfTurns, playerBoard, 0); //only uses difficulty in single player mode.
             }
 
-            for (Player player : players) { //Prints scores
-                player.printScore();
-            }
+            printScores(players);
+            playAgain = askToPlayAgain();
+        }
+    }
 
-            while(true) { //option to play again
-                System.out.println("Vill du spela igen (j/n)?");
-                answer = sc.nextLine();
-                if (answer.equalsIgnoreCase("n") || answer.equalsIgnoreCase("nej")) {
-                    playAgain = false;
-                    break;
-                } else if(answer.equalsIgnoreCase("j") || answer.equalsIgnoreCase("ja")) {
-                    break;
-                }
+    public void printScores(ArrayList<Player> players) {
+        for (Player player : players) {
+            player.printScore();
+        }
+        System.out.println(Board.getNumbersOfDraw() + (Board.getNumbersOfDraw() == 1 ? " omgång blev oavgjord" : " omgångar blev oavgjorda"));
+    }
+
+    public boolean askToPlayAgain() {
+        String answer;
+        while(true) { //option to play again
+            System.out.println("Vill du spela igen (j/n)?");
+            answer = sc.nextLine();
+            if (answer.equalsIgnoreCase("n") || answer.equalsIgnoreCase("nej")) {
+                return false;
+            } else if(answer.equalsIgnoreCase("j") || answer.equalsIgnoreCase("ja")) {
+                return true;
             }
         }
+    }
+
+    public boolean gameTurn(int numbersOfTurns, Board playerBoard, int difficulty) {
+        boolean winnerOrDraw = false;
+         //Players keeps playing until one has won or it is a draw
+            for (Player player : players) {
+                numbersOfTurns++;
+                if(getGameMode().equalsIgnoreCase("single-player") && players.get(1) == player) {
+                    winnerOrDraw = player.computerTurn(playerBoard, difficulty);
+                } else {
+                    winnerOrDraw = player.playerTurn(playerBoard);
+                }
+                if (winnerOrDraw) {
+                    player.setNumberOfWins(player.getNumberOfWins() + 1);
+                    System.out.println("Vinnare är " + player.getName());
+                    break;
+                } else if (numbersOfTurns == (playerBoard.getNumbersOfRows() * playerBoard.getNumbersOfRows())) {
+                    System.out.println("Det blev oavgjort.");
+                    Board.setNumbersOfDraw(Board.getNumbersOfDraw()+1);
+                    winnerOrDraw = true;
+                    break;
+                }
+            }
+            return winnerOrDraw;
+
     }
 
 }

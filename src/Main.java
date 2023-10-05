@@ -18,9 +18,11 @@ public class Main {
             choice = sc.nextLine();
             switch (choice.toLowerCase()) {
                 case "1", "spelare mot spelare" -> {
+                    game.setGameMode("Multiplayer");
                     game.multiPlayer();
                 }
                 case "2", "spelare mot dator" -> {
+                    game.setGameMode("Single-player");
                     game.singlePlayer();
                 }
                 case "3", "avsluta" -> {

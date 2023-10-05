@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class Board {
+    static int numbersOfDraw = 0;
     private String[][] boardArray;
     private int numbersOfRows;
     private int numberToWin;
@@ -8,6 +9,15 @@ public class Board {
 
     public Board() {
     }
+
+    public static int getNumbersOfDraw() {
+        return numbersOfDraw;
+    }
+
+    public static void setNumbersOfDraw(int numbersOfDraw) {
+        Board.numbersOfDraw = numbersOfDraw;
+    }
+
     public int getNumberToWin() {
         return numberToWin;
     }
@@ -45,10 +55,10 @@ public class Board {
             try {
                 checkString = sc.nextLine();
                 numberOfRowsTiles = Integer.parseInt(checkString);
-                if (numberOfRowsTiles >= 3) {
+                if (numberOfRowsTiles >= 3 && numberOfRowsTiles <= 10) {
                     break;
                 }
-                System.out.println("Spelplanen måste ha minst 3x3 rutor.");
+                System.out.println("Spelplanen måste ha minst 3x3 rutor och max 10x10.");
             } catch (Exception e) {
                 System.out.println("Fel input.");
             }
@@ -60,6 +70,8 @@ public class Board {
         } else {
             this.numberToWin = 5;
         }
+        System.out.println("Brädet kommer nu vara " + getNumbersOfRows() + "x" + getNumbersOfRows() + " rutor.");
+        System.out.println("Det krävs " + getNumberToWin() + " i rad för att vinna.");
     }
 
 
@@ -84,26 +96,37 @@ public class Board {
         return (getBoardArray()[rowIndex][colIndex].equalsIgnoreCase(" "));
     }
 
-    public boolean markTile (String answer, int rowIndex, int colIndex, Player player) {
-        if(checkIfTileExists(answer)) {
-            if(checkIfTileIsFree(rowIndex, colIndex)) {
-
-            }
-        }
-        return false;
-    }
-
     public void printBoard() {
+        System.out.println(printColumnNumbers());
+        System.out.println(printBorder());
         for (int i = 1; i <= numbersOfRows; i++) {
+            System.out.print((char) (i+96) + " |");
             for (int j = 1; j <= numbersOfRows; j++) {
-                System.out.print(" " + boardArray[i - 1][j - 1] + " " + (j % numbersOfRows != 0 ? "|" : "\n")); //Prints players marks + vertical borders
+                System.out.print(" " + boardArray[i - 1][j - 1] + " " + "|" + (j == numbersOfRows  ? "\n" : "")); //Prints players marks + vertical borders
             }
             if (i < numbersOfRows) {
+                System.out.print("  |");
                 for (int k = 1; k <= numbersOfRows; k++) { // prints horizontal borders
-                    System.out.print("---" + (k < numbersOfRows ? "+" : "\n"));
+                    System.out.print("---" + (k < numbersOfRows ? "+" : "|\n"));
                 }
             }
         }
+        System.out.println(printBorder());
+    }
+
+    public String printBorder() {
+        String border = "   ";
+        for(int i = 1; i <= numbersOfRows; i++) {
+            border = border.concat((i != numbersOfRows ? "----" : "---"));
+        }
+        return border;
+    }
+    public String printColumnNumbers() {
+        String columnNumbers= "   ";
+        for(int i = 1; i <= numbersOfRows; i++) {
+            columnNumbers = columnNumbers.concat(" " + i + "  ");
+        }
+        return columnNumbers;
     }
 
 }

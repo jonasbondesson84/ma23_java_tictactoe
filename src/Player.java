@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class Player {
@@ -5,6 +6,7 @@ public class Player {
     private int numberOfWins;
     private String mark;
     Scanner sc = new Scanner(System.in);
+    Random rand = new Random();
 
     public Player(String name, String mark) {
         this.name = name;
@@ -51,27 +53,45 @@ public class Player {
             }
         }
         playerBoard.printBoard(); //Prints the board
-        return checkIfWin(rowIndex, colIndex, playerBoard, mark); //Checks if someone has won.
+        return checkIfWin(rowIndex, colIndex, playerBoard); //Checks if someone has won.
     }
 
-    public boolean checkIfWin(int lastMarkRow, int lastMarkCol, Board playerBoard, String mark) {
+    public boolean computerTurn(Board playerBoard, int difficulty) {
+        int rowIndex = 0;
+        int colIndex = 0;
+        System.out.println("\n" + getName() + ", din tur!");
+        System.out.println("Du spelar med " + mark);
+        if (difficulty == 1) {
+            do {
+                rowIndex = rand.nextInt(0, playerBoard.getNumbersOfRows());
+                colIndex = rand.nextInt(0, playerBoard.getNumbersOfRows());
+            } while (!playerBoard.checkIfTileIsFree(rowIndex, colIndex));
+            playerBoard.setBoardArrayElement(rowIndex, colIndex, mark);
+            playerBoard.printBoard();
+        } else if (difficulty == 2){
+            
+        }
+        return checkIfWin(rowIndex, colIndex, playerBoard); //Checks if someone has won.
+    }
+
+    public boolean checkIfWin(int lastMarkRow, int lastMarkCol, Board playerBoard) {
 
         if (checkIfWinRow(playerBoard, lastMarkRow, lastMarkCol) || checkIfWinCol(playerBoard, lastMarkRow, lastMarkCol)) {
             return true;
         } else {
-            return checkIfWinDiagonally(playerBoard, lastMarkRow,lastMarkCol);
+            return checkIfWinDiagonally(playerBoard, lastMarkRow, lastMarkCol);
         }
     }
 
     public boolean checkIfWinCol(Board playerBoard, int lastMarkRow, int lastMarkCol) {
         int numbersInCol = 1;
         int markRow = lastMarkRow - 1;
-        while(markRow >= 0 && playerBoard.getBoardArrayElement(markRow, lastMarkCol).equalsIgnoreCase(mark)) {
+        while (markRow >= 0 && playerBoard.getBoardArrayElement(markRow, lastMarkCol).equalsIgnoreCase(mark)) {
             numbersInCol++;
             markRow--;
         }
         markRow = lastMarkRow + 1;
-        while(markRow < playerBoard.getNumbersOfRows() && playerBoard.getBoardArrayElement(markRow, lastMarkCol).equalsIgnoreCase(mark)) {
+        while (markRow < playerBoard.getNumbersOfRows() && playerBoard.getBoardArrayElement(markRow, lastMarkCol).equalsIgnoreCase(mark)) {
             numbersInCol++;
             markRow++;
         }
@@ -81,12 +101,12 @@ public class Player {
     public boolean checkIfWinRow(Board playerBoard, int lastMarkRow, int lastMarkCol) {
         int numbersInRow = 1;
         int markCol = lastMarkCol - 1;
-        while(markCol >= 0 && playerBoard.getBoardArrayElement(lastMarkRow, markCol).equalsIgnoreCase(mark)) {
+        while (markCol >= 0 && playerBoard.getBoardArrayElement(lastMarkRow, markCol).equalsIgnoreCase(mark)) {
             numbersInRow++;
             markCol--;
         }
         markCol = lastMarkCol + 1;
-        while(markCol < playerBoard.getNumbersOfRows() && playerBoard.getBoardArrayElement(lastMarkRow, markCol).equalsIgnoreCase(mark)) {
+        while (markCol < playerBoard.getNumbersOfRows() && playerBoard.getBoardArrayElement(lastMarkRow, markCol).equalsIgnoreCase(mark)) {
             numbersInRow++;
             markCol++;
         }
@@ -95,33 +115,37 @@ public class Player {
 
     public boolean checkIfWinDiagonally(Board playerBoard, int lastMarkRow, int lastMarkCol) {
         int numbersInDiagonally = 1;
-        int markRow = lastMarkRow-1;
-        int markCol = lastMarkCol-1;
-        while ((markRow >= 0 && markCol >= 0) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)){
+        int markRow = lastMarkRow - 1;
+        int markCol = lastMarkCol - 1;
+        //Checks how many in a row you have to north west
+        while ((markRow >= 0 && markCol >= 0) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)) {
             numbersInDiagonally++;
             markRow--;
             markCol--;
         }
-        markRow = lastMarkRow+1;
-        markCol = lastMarkCol+1;
+        markRow = lastMarkRow + 1;
+        markCol = lastMarkCol + 1;
+        //checks how many in a row you have to sout east
         while ((markRow < playerBoard.getNumbersOfRows() && markCol < playerBoard.getNumbersOfRows()) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)) {
             numbersInDiagonally++;
             markRow++;
             markCol++;
         }
-        if(numbersInDiagonally >= playerBoard.getNumberToWin()) {
+        if (numbersInDiagonally >= playerBoard.getNumberToWin()) {
             return true;
         } else {
             numbersInDiagonally = 1;
-            markRow = lastMarkRow-1;
-            markCol = lastMarkCol+1;
-            while ((markRow >= 0 && markCol < playerBoard.getNumbersOfRows()) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)){
+            markRow = lastMarkRow - 1;
+            markCol = lastMarkCol + 1;
+            //checks how man in a row you have to north east
+            while ((markRow >= 0 && markCol < playerBoard.getNumbersOfRows()) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)) {
                 numbersInDiagonally++;
                 markRow--;
                 markCol++;
             }
-            markRow = lastMarkRow+1;
-            markCol = lastMarkCol-1;
+            markRow = lastMarkRow + 1;
+            markCol = lastMarkCol - 1;
+            //checks how many in a row you have to sout west
             while ((markRow < playerBoard.getNumbersOfRows() && markCol >= 0) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)) {
                 numbersInDiagonally++;
                 markRow++;
@@ -132,6 +156,6 @@ public class Player {
     }
 
     public void printScore() {
-        System.out.println(name + " har " + numberOfWins +(numberOfWins == 1 ? " vinst" : " vinster"));
+        System.out.println(name + " har " + numberOfWins + (numberOfWins == 1 ? " vinst" : " vinster"));
     }
 }
