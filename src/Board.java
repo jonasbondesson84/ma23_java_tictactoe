@@ -1,54 +1,22 @@
-import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Board {
     private String[][] boardArray;
     private int numbersOfRows;
-    private int numbersOfSquares;
     private int numberToWin;
+    Scanner sc = new Scanner(System.in);
 
-    public Board(int numbersOfRows) {
-        this.numbersOfRows = numbersOfRows;
-        this.numbersOfSquares = numbersOfRows * numbersOfRows;
-        this.boardArray = new String[numbersOfRows][numbersOfRows];
-        if(numbersOfRows <= 5) {
-            this.numberToWin = numbersOfRows;
-        } else {
-            this.numberToWin = 5;
-        }
+    public Board() {
     }
-
     public int getNumberToWin() {
         return numberToWin;
     }
-
-    public void setNumberToWin(int numberToWin) {
-        this.numberToWin = numberToWin;
-    }
-
     public int getNumbersOfRows() {
         return numbersOfRows;
     }
-
-    public void setNumbersOfRows(int numbersOfRows) {
-        this.numbersOfRows = numbersOfRows;
-    }
-
-    public int getNumbersOfSquares() {
-        return numbersOfSquares;
-    }
-
-    public void setNumbersOfSquares(int numbersOfSquares) {
-        this.numbersOfSquares = numbersOfSquares;
-    }
-
     public String[][] getBoardArray() {
         return boardArray;
     }
-
-    public void setBoardArray(String[][] boardArray) {
-        this.boardArray = boardArray;
-    }
-
     public String getBoardArrayElement(int rowIndex, int colIndex) {
         return this.boardArray[rowIndex][colIndex];
     }
@@ -57,7 +25,7 @@ public class Board {
         this.boardArray[rowIndex][colIndex] = newValue;
     }
 
-    public void fillList() {
+    public void resetBoard() {
         for (int i = 0; i < numbersOfRows; i++) {
             for (int j = 0; j < numbersOfRows; j++) {
                 boardArray[i][j] = " ";
@@ -66,13 +34,63 @@ public class Board {
     }
 
     public int getRow(char row) {
-     //   System.out.println(row-96);
         return row - 96;
-
     }
 
-    public void createWinList() {
+    public void setBoardSize() {
+        String checkString;
+        int numberOfRowsTiles;
+        while (true) {
+            System.out.println("Hur många rutor (vertikalt) ska spelplanen ha");
+            try {
+                checkString = sc.nextLine();
+                numberOfRowsTiles = Integer.parseInt(checkString);
+                if (numberOfRowsTiles >= 3) {
+                    break;
+                }
+                System.out.println("Spelplanen måste ha minst 3x3 rutor.");
+            } catch (Exception e) {
+                System.out.println("Fel input.");
+            }
+        }
+        this.numbersOfRows = numberOfRowsTiles;
+        this.boardArray = new String[numbersOfRows][numbersOfRows];
+        if(numbersOfRows <= 5) {
+            this.numberToWin = numbersOfRows;
+        } else {
+            this.numberToWin = 5;
+        }
+    }
 
+
+    public boolean checkIfTileExists(String answer) {
+        int rowIndex;
+        int colIndex;
+        while (true) {
+            try {
+                rowIndex = getRow(answer.charAt(0)) - 1;
+                colIndex = Character.getNumericValue(answer.charAt(1)) - 1;
+                return (rowIndex < getNumbersOfRows() && colIndex < getNumbersOfRows() && rowIndex >= 0 && colIndex >= 0);
+            }
+            catch (Exception e) {
+                System.out.println("Fel input, försök igen.");
+                answer = sc.nextLine();
+            }
+
+        }
+    }
+
+    public boolean checkIfTileIsFree(int rowIndex, int colIndex) {
+        return (getBoardArray()[rowIndex][colIndex].equalsIgnoreCase(" "));
+    }
+
+    public boolean markTile (String answer, int rowIndex, int colIndex, Player player) {
+        if(checkIfTileExists(answer)) {
+            if(checkIfTileIsFree(rowIndex, colIndex)) {
+
+            }
+        }
+        return false;
     }
 
     public void printBoard() {
