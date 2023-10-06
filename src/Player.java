@@ -5,13 +5,44 @@ public class Player {
     private String name;
     private int numberOfWins;
     private String mark;
+    private int lastMarkedRow; //Used to track which tile was last marked.
+    private int lastMarkedCol; //Used to track which tile was last marked
     Scanner sc = new Scanner(System.in);
     Random rand = new Random();
+    Computer computer = new Computer();
 
     public Player(String name, String mark) {
         this.name = name;
         this.numberOfWins = 0;
         this.mark = mark;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
+    }
+
+    public int getLastMarkedRow() {
+        return lastMarkedRow;
+    }
+
+    public void setLastMarkedRow(int lastMarkedRow) {
+        this.lastMarkedRow = lastMarkedRow;
+    }
+
+    public int getLastMarkedCol() {
+        return lastMarkedCol;
+    }
+
+    public void setLastMarkedCol(int lastMarkedCol) {
+        this.lastMarkedCol = lastMarkedCol;
     }
 
     public String getName() {
@@ -28,8 +59,8 @@ public class Player {
 
     public boolean playerTurn(Board playerBoard) {
         String answer;
-        int rowIndex = 0;
-        int colIndex = 0;
+        int rowIndex;
+        int colIndex;
         boolean addedMark = false;
 
         System.out.println("\n" + getName() + ", din tur!");
@@ -44,6 +75,8 @@ public class Player {
             if (playerBoard.checkIfTileExists(answer)) { //Checks if tile is within board
                 if (playerBoard.checkIfTileIsFree(rowIndex, colIndex)) { //checks if tile is free
                     playerBoard.setBoardArrayElement(rowIndex, colIndex, mark);
+                    this.lastMarkedRow = rowIndex;
+                    this.lastMarkedCol = colIndex;
                     addedMark = true;
                 } else {
                     System.out.println("Rutan är tyvärr redan upptagen, försök igen.");
@@ -53,107 +86,38 @@ public class Player {
             }
         }
         playerBoard.printBoard(); //Prints the board
-        return checkIfWin(rowIndex, colIndex, playerBoard); //Checks if someone has won.
+        return playerBoard.checkIfWin(this); //Checks if someone has won.
     }
 
-    public boolean computerTurn(Board playerBoard, int difficulty) {
-        int rowIndex = 0;
-        int colIndex = 0;
-        System.out.println("\n" + getName() + ", din tur!");
-        System.out.println("Du spelar med " + mark);
-        if (difficulty == 1) {
-            do {
-                rowIndex = rand.nextInt(0, playerBoard.getNumbersOfRows());
-                colIndex = rand.nextInt(0, playerBoard.getNumbersOfRows());
-            } while (!playerBoard.checkIfTileIsFree(rowIndex, colIndex));
-            playerBoard.setBoardArrayElement(rowIndex, colIndex, mark);
-            playerBoard.printBoard();
-        } else if (difficulty == 2){
-
-        }
-        return checkIfWin(rowIndex, colIndex, playerBoard); //Checks if someone has won.
-    }
-
-    public boolean checkIfWin(int lastMarkRow, int lastMarkCol, Board playerBoard) {
-
-        if (checkIfWinRow(playerBoard, lastMarkRow, lastMarkCol) || checkIfWinCol(playerBoard, lastMarkRow, lastMarkCol)) {
-            return true;
-        } else {
-            return checkIfWinDiagonally(playerBoard, lastMarkRow, lastMarkCol);
-        }
-    }
-
-    public boolean checkIfWinCol(Board playerBoard, int lastMarkRow, int lastMarkCol) {
-        int numbersInCol = 1;
-        int markRow = lastMarkRow - 1;
-        while (markRow >= 0 && playerBoard.getBoardArrayElement(markRow, lastMarkCol).equalsIgnoreCase(mark)) {
-            numbersInCol++;
-            markRow--;
-        }
-        markRow = lastMarkRow + 1;
-        while (markRow < playerBoard.getNumbersOfRows() && playerBoard.getBoardArrayElement(markRow, lastMarkCol).equalsIgnoreCase(mark)) {
-            numbersInCol++;
-            markRow++;
-        }
-        return (numbersInCol >= playerBoard.getNumberToWin());
-    }
-
-    public boolean checkIfWinRow(Board playerBoard, int lastMarkRow, int lastMarkCol) {
-        int numbersInRow = 1;
-        int markCol = lastMarkCol - 1;
-        while (markCol >= 0 && playerBoard.getBoardArrayElement(lastMarkRow, markCol).equalsIgnoreCase(mark)) {
-            numbersInRow++;
-            markCol--;
-        }
-        markCol = lastMarkCol + 1;
-        while (markCol < playerBoard.getNumbersOfRows() && playerBoard.getBoardArrayElement(lastMarkRow, markCol).equalsIgnoreCase(mark)) {
-            numbersInRow++;
-            markCol++;
-        }
-        return (numbersInRow >= playerBoard.getNumberToWin());
-    }
-
-    public boolean checkIfWinDiagonally(Board playerBoard, int lastMarkRow, int lastMarkCol) {
-        int numbersInDiagonally = 1;
-        int markRow = lastMarkRow - 1;
-        int markCol = lastMarkCol - 1;
-        //Checks how many in a row you have to north west
-        while ((markRow >= 0 && markCol >= 0) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)) {
-            numbersInDiagonally++;
-            markRow--;
-            markCol--;
-        }
-        markRow = lastMarkRow + 1;
-        markCol = lastMarkCol + 1;
-        //checks how many in a row you have to sout east
-        while ((markRow < playerBoard.getNumbersOfRows() && markCol < playerBoard.getNumbersOfRows()) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)) {
-            numbersInDiagonally++;
-            markRow++;
-            markCol++;
-        }
-        if (numbersInDiagonally >= playerBoard.getNumberToWin()) {
-            return true;
-        } else {
-            numbersInDiagonally = 1;
-            markRow = lastMarkRow - 1;
-            markCol = lastMarkCol + 1;
-            //checks how man in a row you have to north east
-            while ((markRow >= 0 && markCol < playerBoard.getNumbersOfRows()) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)) {
-                numbersInDiagonally++;
-                markRow--;
-                markCol++;
-            }
-            markRow = lastMarkRow + 1;
-            markCol = lastMarkCol - 1;
-            //checks how many in a row you have to sout west
-            while ((markRow < playerBoard.getNumbersOfRows() && markCol >= 0) && playerBoard.getBoardArrayElement(markRow, markCol).equalsIgnoreCase(mark)) {
-                numbersInDiagonally++;
-                markRow++;
-                markCol--;
-            }
-        }
-        return (numbersInDiagonally >= playerBoard.getNumberToWin());
-    }
+//    public boolean computerTurn(Board playerBoard, int difficulty) {
+//
+//        System.out.println("\n" + getName() + ", din tur!");
+//        System.out.println("Du spelar med " + mark);
+//        if (difficulty == 1) {
+//            computerEasyAction(playerBoard);
+//        } else if (difficulty == 2) {
+//            computerHardAction(playerBoard);
+//        }
+//        return playerBoard.checkIfWin(this); //Checks if someone has won.
+//    }
+//
+//    public void computerEasyAction(Board playerBoard) {
+//        int rowIndex;
+//        int colIndex;
+//        do {
+//            rowIndex = rand.nextInt(0, playerBoard.getNumbersOfRows());
+//            colIndex = rand.nextInt(0, playerBoard.getNumbersOfRows());
+//        } while (!playerBoard.checkIfTileIsFree(rowIndex, colIndex));
+//        playerBoard.setBoardArrayElement(rowIndex, colIndex, mark);
+//        this.lastMarkedRow = rowIndex;
+//        this.lastMarkedCol = colIndex;
+//        playerBoard.printBoard();
+//
+//    }
+//    public void computerHardAction(Board playerBoard) {
+//        int rowIndex = 0;
+//        int colIndex = 0;
+//    }
 
     public void printPlayerScore() {
         System.out.println(name + " har " + numberOfWins + (numberOfWins == 1 ? " vinst" : " vinster"));

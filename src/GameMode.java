@@ -10,6 +10,7 @@ public class GameMode {
     public void setGameMode(String gameMode) {
         GameMode = gameMode;
     }
+
     public String getGameMode() {
         return GameMode;
     }
@@ -22,12 +23,14 @@ public class GameMode {
         Board.setNumbersOfDraw(0);
         boolean playAgain = true;
         Board playerBoard = new Board();
+        Computer computer = new Computer();
         System.out.println("Välkommen till single player läget!");
         System.out.println("Ange namnet på spelaren:");
 
         players.add(new Player(sc.nextLine(), "x"));
         System.out.println("Välkommen " + players.get(0).getName() + "! Du kommer spela mot Marvin.");
         players.add(new Player("Marvin", "o"));
+
         while (playAgain) {
             difficulty = setDifficulty();
             playerBoard.setBoardSize();  //Sets the board size with method
@@ -38,7 +41,7 @@ public class GameMode {
             playerBoard.printBoard();
 
             while (!winnerOrDraw) { //Players keeps playing until one has won or it is a draw
-                winnerOrDraw = gameTurn(playerBoard, difficulty);
+                winnerOrDraw = gameTurn(playerBoard, difficulty, computer, players);
             }
 
             printScores(players);
@@ -79,6 +82,7 @@ public class GameMode {
         boolean winnerOrDraw;
         boolean playAgain = true;
         Board playerBoard = new Board();
+        Computer computer = new Computer();
 
         System.out.println("Ange namnet på den första spelaren:");
         players.add(new Player(sc.nextLine(), "x"));
@@ -93,7 +97,7 @@ public class GameMode {
             playerBoard.printBoard();
 
             while (!winnerOrDraw) {  //Players keeps playing until one has won or it is a draw
-                winnerOrDraw = gameTurn( playerBoard, 0); //only uses difficulty in single player mode.
+                winnerOrDraw = gameTurn(playerBoard, 0, computer, players); //only uses difficulty in single player mode.
             }
 
             printScores(players);
@@ -110,42 +114,41 @@ public class GameMode {
 
     public boolean askToPlayAgain() {
         String answer;
-        while(true) { //option to play again
+        while (true) { //option to play again
             System.out.println("Vill du spela igen (j/n)?");
             answer = sc.nextLine();
             if (answer.equalsIgnoreCase("n") || answer.equalsIgnoreCase("nej")) {
                 return false;
-            } else if(answer.equalsIgnoreCase("j") || answer.equalsIgnoreCase("ja")) {
+            } else if (answer.equalsIgnoreCase("j") || answer.equalsIgnoreCase("ja")) {
                 return true;
             }
         }
     }
 
-    public boolean gameTurn( Board playerBoard, int difficulty) {
+    public boolean gameTurn(Board playerBoard, int difficulty, Computer computer, ArrayList<Player> players) {
 
         boolean winnerOrDraw = false;
-         //Players keeps playing until one has won or it is a draw
-            for (Player player : players) {
-                if(getGameMode().equalsIgnoreCase("single-player") && players.get(1) == player) {
-                    winnerOrDraw = player.computerTurn(playerBoard, difficulty);
-                } else {
-                    winnerOrDraw = player.playerTurn(playerBoard);
-                }
-                if (winnerOrDraw) {
-                    player.setNumberOfWins(player.getNumberOfWins() + 1);
-                    System.out.println("Vinnare är " + player.getName());
-                    break;
-                } else if (playerBoard.checkIfBoardIsFull()) {
-                    System.out.println("Det blev oavgjort.");
-                    Board.setNumbersOfDraw(Board.getNumbersOfDraw()+1);
-                    winnerOrDraw = true;
-                    break;
-                }
+        //Players keeps playing until one has won or it is a draw
+        for (Player player : players) {
+            if (getGameMode().equalsIgnoreCase("single-player") && players.get(1) == player) {
+                winnerOrDraw = computer.computerTurn(playerBoard, difficulty, player);
+            } else {
+                winnerOrDraw = player.playerTurn(playerBoard);
             }
-            return winnerOrDraw;
+            if (winnerOrDraw) {
+                player.setNumberOfWins(player.getNumberOfWins() + 1);
+                System.out.println("Vinnare är " + player.getName());
+                break;
+            } else if (playerBoard.checkIfBoardIsFull()) {
+                System.out.println("Det blev oavgjort.");
+                Board.setNumbersOfDraw(Board.getNumbersOfDraw() + 1);
+                winnerOrDraw = true;
+                break;
+            }
+        }
+        return winnerOrDraw;
 
     }
-
 
 
 }
