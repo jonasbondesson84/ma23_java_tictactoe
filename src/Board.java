@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Board {
     static int numbersOfDraw = 0;
-    private String[][] boardArray;
+    private char[][] boardArray;
     private int numbersOfRows;
     private int numberToWin;
     Scanner sc = new Scanner(System.in);
@@ -26,22 +26,22 @@ public class Board {
         return numbersOfRows;
     }
 
-    public String[][] getBoardArray() {
+    public char[][] getBoardArray() {
         return boardArray;
     }
 
-    public String getBoardArrayElement(int rowIndex, int colIndex) {
+    public char getBoardArrayElement(int rowIndex, int colIndex) {
         return this.boardArray[rowIndex][colIndex];
     }
 
-    public void setBoardArrayElement(int rowIndex, int colIndex, String newValue) {
+    public void setBoardArrayElement(int rowIndex, int colIndex, char newValue) {
         this.boardArray[rowIndex][colIndex] = newValue;
     }
 
     public void resetBoard() {
         for (int i = 0; i < numbersOfRows; i++) {
             for (int j = 0; j < numbersOfRows; j++) {
-                boardArray[i][j] = " ";
+                boardArray[i][j] = ' ';
             }
         }
     }
@@ -67,7 +67,7 @@ public class Board {
             }
         }
         this.numbersOfRows = numberOfRowsTiles;
-        this.boardArray = new String[numbersOfRows][numbersOfRows];
+        this.boardArray = new char[numbersOfRows][numbersOfRows];
         if (numbersOfRows <= 5) {
             this.numberToWin = numbersOfRows;
         } else {
@@ -75,27 +75,6 @@ public class Board {
         }
         System.out.println("Brädet kommer nu vara " + getNumbersOfRows() + "x" + getNumbersOfRows() + " rutor.");
         System.out.println("Det krävs " + getNumberToWin() + " i rad för att vinna.");
-    }
-
-
-    public boolean checkIfTileExists(String answer) {
-        int rowIndex;
-        int colIndex;
-        while (true) {
-            try {
-                rowIndex = getRow(answer.charAt(0)) - 1;
-                colIndex = Character.getNumericValue(answer.charAt(1)) - 1;
-                return (rowIndex < getNumbersOfRows() && colIndex < getNumbersOfRows() && rowIndex >= 0 && colIndex >= 0);
-            } catch (Exception e) {
-                System.out.println("Fel input, försök igen.");
-                answer = sc.nextLine();
-            }
-
-        }
-    }
-
-    public boolean checkIfTileIsFree(int rowIndex, int colIndex) {
-        return (getBoardArray()[rowIndex][colIndex].equalsIgnoreCase(" "));
     }
 
     public void printBoard() {
@@ -132,10 +111,30 @@ public class Board {
         return columnNumbers;
     }
 
+    public boolean checkIfTileExists(String answer) {
+        int rowIndex;
+        int colIndex;
+        while (true) {
+            try {
+                rowIndex = getRow(answer.charAt(0)) - 1;
+                colIndex = Character.getNumericValue(answer.charAt(1)) - 1;
+                return (rowIndex < getNumbersOfRows() && colIndex < getNumbersOfRows() && rowIndex >= 0 && colIndex >= 0);
+            } catch (Exception e) {
+                System.out.println("Fel input, försök igen.");
+                answer = sc.nextLine();
+            }
+
+        }
+    }
+
+    public boolean checkIfTileIsFree(int rowIndex, int colIndex) {
+        return (getBoardArray()[rowIndex][colIndex] == ' ');
+    }
+
     public boolean checkIfBoardIsFull() {
         for (int i = 0; i < numbersOfRows; i++) {
             for (int j = 0; j < numbersOfRows; j++) {
-                if (getBoardArrayElement(i, j).equalsIgnoreCase(" ")) {
+                if (getBoardArrayElement(i, j) == ' ') {
                     return false;
                 }
             }
@@ -153,12 +152,12 @@ public class Board {
     public boolean checkIfWinCol( Player player) {
         int numbersInCol = 1;
         int markRow = player.getLastMarkedRow() - 1;
-        while (markRow >= 0 && getBoardArrayElement(markRow, player.getLastMarkedCol()).equalsIgnoreCase(player.getMark())) {
+        while (markRow >= 0 && getBoardArrayElement(markRow, player.getLastMarkedCol()) == player.getMark()) {
             numbersInCol++;
             markRow--;
         }
         markRow = player.getLastMarkedRow() + 1;
-        while (markRow < getNumbersOfRows() && getBoardArrayElement(markRow, player.getLastMarkedCol()).equalsIgnoreCase(player.getMark())) {
+        while (markRow < getNumbersOfRows() && getBoardArrayElement(markRow, player.getLastMarkedCol()) == player.getMark()) {
             numbersInCol++;
             markRow++;
         }
@@ -168,12 +167,12 @@ public class Board {
     public boolean checkIfWinRow(Player player) {
         int numbersInRow = 1;
         int markCol = player.getLastMarkedCol() - 1;
-        while (markCol >= 0 && getBoardArrayElement(player.getLastMarkedRow(), markCol).equalsIgnoreCase(player.getMark())) {
+        while (markCol >= 0 && getBoardArrayElement(player.getLastMarkedRow(), markCol) == player.getMark()) {
             numbersInRow++;
             markCol--;
         }
         markCol = player.getLastMarkedCol() + 1;
-        while (markCol < getNumbersOfRows() && getBoardArrayElement(player.getLastMarkedRow(), markCol).equalsIgnoreCase(player.getMark())) {
+        while (markCol < getNumbersOfRows() && getBoardArrayElement(player.getLastMarkedRow(), markCol) == player.getMark()) {
             numbersInRow++;
             markCol++;
         }
@@ -185,7 +184,7 @@ public class Board {
         int markRow = player.getLastMarkedRow() - 1;
         int markCol = player.getLastMarkedCol() - 1;
         //Checks how many in a row you have to North West
-        while ((markRow >= 0 && markCol >= 0) && getBoardArrayElement(markRow, markCol).equalsIgnoreCase(player.getMark())) {
+        while ((markRow >= 0 && markCol >= 0) && getBoardArrayElement(markRow, markCol) == player.getMark()) {
             numbersInDiagonally++;
             markRow--;
             markCol--;
@@ -193,7 +192,7 @@ public class Board {
         markRow = player.getLastMarkedRow() + 1;
         markCol = player.getLastMarkedCol() + 1;
         //checks how many in a row you have to South East
-        while ((markRow < getNumbersOfRows() && markCol < getNumbersOfRows()) && getBoardArrayElement(markRow, markCol).equalsIgnoreCase(player.getMark())) {
+        while ((markRow < getNumbersOfRows() && markCol < getNumbersOfRows()) && getBoardArrayElement(markRow, markCol) == player.getMark()) {
             numbersInDiagonally++;
             markRow++;
             markCol++;
@@ -205,7 +204,7 @@ public class Board {
             markRow = player.getLastMarkedRow() - 1;
             markCol = player.getLastMarkedCol() + 1;
             //checks how man in a row you have to North East
-            while ((markRow >= 0 && markCol < getNumbersOfRows()) && getBoardArrayElement(markRow, markCol).equalsIgnoreCase(player.getMark())) {
+            while ((markRow >= 0 && markCol < getNumbersOfRows()) && getBoardArrayElement(markRow, markCol) == player.getMark()) {
                 numbersInDiagonally++;
                 markRow--;
                 markCol++;
@@ -213,7 +212,7 @@ public class Board {
             markRow = player.getLastMarkedRow() + 1;
             markCol = player.getLastMarkedCol() - 1;
             //checks how many in a row you have to South West
-            while ((markRow < getNumbersOfRows() && markCol >= 0) && getBoardArrayElement(markRow, markCol).equalsIgnoreCase(player.getMark())) {
+            while ((markRow < getNumbersOfRows() && markCol >= 0) && getBoardArrayElement(markRow, markCol) == player.getMark()) {
                 numbersInDiagonally++;
                 markRow++;
                 markCol--;

@@ -1,32 +1,22 @@
-import java.util.Random;
+
 import java.util.Scanner;
 
 public class Player {
     private String name;
     private int numberOfWins;
-    private String mark;
+    private char mark;
     private int lastMarkedRow; //Used to track which tile was last marked.
     private int lastMarkedCol; //Used to track which tile was last marked
     Scanner sc = new Scanner(System.in);
-    Random rand = new Random();
-    Computer computer = new Computer();
 
-    public Player(String name, String mark) {
+    public Player(String name, char mark) {
         this.name = name;
         this.numberOfWins = 0;
         this.mark = mark;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMark() {
+    public char getMark() {
         return mark;
-    }
-
-    public void setMark(String mark) {
-        this.mark = mark;
     }
 
     public int getLastMarkedRow() {
