@@ -39,15 +39,18 @@ public class Computer {
 
     }
 
-    public boolean computerTurn(Board playerBoard, int difficulty, Player player, ArrayList<Player> players) {
+    public boolean computerTurn(Board playerBoard, Player player, ArrayList<Player> players) {
 
         System.out.println("\n" + player.getName() + ", din tur!");
         System.out.println("Du spelar med " + player.getMark());
+
         if (difficulty == 1) {
             computerEasyAction(playerBoard, player);
         } else if (difficulty == 2) {
+            System.out.println("...");
             computerHardAction(playerBoard, player, players);
         }
+        System.out.println(playerBoard.checkIfWin(player));
         return playerBoard.checkIfWin(player); //Checks if someone has won.
     }
 
@@ -66,8 +69,18 @@ public class Computer {
     }
 
     public void computerHardAction(Board playerBoard, Player player, ArrayList<Player> players) {
-        int rowIndex = 0;
-        int colIndex = 0;
+        int rowIndex;
+        int colIndex;
+        if(!checkBestMoveCol(player, playerBoard) && !checkBestMoveRow(player, playerBoard)) {
+            do {
+                rowIndex = rand.nextInt(0, playerBoard.getNumbersOfRows());
+                colIndex = rand.nextInt(0, playerBoard.getNumbersOfRows());
+            } while (!playerBoard.checkIfTileIsFree(rowIndex, colIndex));
+            playerBoard.setBoardArrayElement(rowIndex, colIndex, player.getMark());
+            player.setLastMarkedRow(rowIndex);
+            player.setLastMarkedCol(colIndex);
+            playerBoard.printBoard();
+        }
 
     }
 
@@ -75,42 +88,93 @@ public class Computer {
         return false;
     }
 
-    public boolean checkBestMoveRow() {
-        return false;
+    public boolean checkBestMoveRow(Player player, Board playerBoard) {
+        int addMarkRow = 0;
+        int addMarkCol = 0;
+        for(int i = 0; i < playerBoard.getNumbersOfRows(); i++) {
+            int countMark=0;
+            for(int j = 0; j < playerBoard.getNumbersOfRows(); j++) {
+                if (playerBoard.getBoardArrayElement(i, j) == player.getMark()) {
+                    countMark++;
+                } else if (playerBoard.getBoardArrayElement(i, j) == ' ') {
+                    addMarkRow = i;
+                    addMarkCol = j;
+                }
+              //  System.out.println("contmark " + countMark +i+j);
+                if (countMark >= playerBoard.getNumberToWin() - 1) {
+                    System.out.println("fount mark row");
+                    playerBoard.setBoardArrayElement(addMarkRow, addMarkCol, player.getMark());
+                    playerBoard.printBoard();
+                    return true;
+                }
+            }
+        }
+//        int numbersInCol = 1;
+//        int nextFreeCol = 0;
+//        int nextFreeRow = 0;
+//        int markCol = player.getLastMarkedCol() - 1;
+//
+//        while (markCol >= 0) {
+//            if (playerBoard.getBoardArrayElement(markCol, player.getLastMarkedRow()) == (player.getMark())) {
+//                numbersInCol++;
+//                markCol--;
+//                System.out.println("if1");
+//                break;
+//            } else if (playerBoard.getBoardArrayElement(markCol, player.getLastMarkedRow()) == ' ') {
+//                nextFreeRow = player.getLastMarkedRow();
+//                nextFreeCol = markCol;
+//                System.out.println("elseif1");
+//                break;
+//            }
+//        }
+//        markCol = player.getLastMarkedCol() + 1;
+//        while (markCol < playerBoard.getNumbersOfRows()) {
+//            if(playerBoard.getBoardArrayElement(markCol, player.getLastMarkedRow()) == player.getMark()) {
+//                numbersInCol++;
+//                markCol++;
+//                System.out.println("if2");
+//                break;
+//            } else if(playerBoard.getBoardArrayElement(markCol, player.getLastMarkedRow()) == ' ') {
+//                nextFreeRow = player.getLastMarkedRow();
+//                nextFreeCol = markCol;
+//                System.out.println("elseif2");
+//                break;
+//            }
+//        }
+//        if ((numbersInCol >= playerBoard.getNumberToWin() - 1)) {
+//            System.out.println("Jag hittade en row");
+//            System.out.println(nextFreeRow + " " + nextFreeCol);
+//            playerBoard.setBoardArrayElement(nextFreeRow, nextFreeCol, player.getMark());
+//            playerBoard.printBoard();
+//            return true;
+//
+//        }
+//        return false;
+            return false;
     }
 
     public boolean checkBestMoveCol(Player player, Board playerBoard) {
-        int numbersInCol = 1;
-        int nextFreeCol = 0;
-        int nextFreeRow = 0;
-        int markRow = player.getLastMarkedRow() - 1;
-        while (markRow >= 0) {
-            if (playerBoard.getBoardArrayElement(markRow, player.getLastMarkedCol()) == (player.getMark())) {
-                numbersInCol++;
-                markRow--;
-            } else if (playerBoard.getBoardArrayElement(markRow, player.getLastMarkedCol()) == ' ') {
-                nextFreeRow = markRow;
-                nextFreeCol = player.getLastMarkedCol();
+        int addMarkRow = 0;
+        int addMarkCol = 0;
+        for (int i = 0; i < playerBoard.getNumbersOfRows(); i++) {
+            int countMark = 0;
+            for (int j = 0; j < playerBoard.getNumbersOfRows(); j++) {
+                if (playerBoard.getBoardArrayElement(j, i) == 'o') {
+                    countMark++;
+                } else if (playerBoard.getBoardArrayElement(j, i) == ' ') {
+                    addMarkRow = j;
+                    addMarkCol = i;
+                }
+
+            if (countMark >= playerBoard.getNumberToWin() - 1) {
+                System.out.println("found mark col");
+                playerBoard.setBoardArrayElement(addMarkRow, addMarkCol, player.getMark());
+                playerBoard.printBoard();
+                return true;
+            }
             }
         }
-        markRow = player.getLastMarkedRow() + 1;
-        while (markRow < playerBoard.getNumbersOfRows()) {
-            if(playerBoard.getBoardArrayElement(markRow, player.getLastMarkedCol()) == player.getMark()) {
-                numbersInCol++;
-                markRow++;
-            } else if(playerBoard.getBoardArrayElement(markRow, player.getLastMarkedCol()) == ' ') {
-                nextFreeRow = markRow;
-                nextFreeCol = player.getLastMarkedCol();
-            }
-        }
-        if ((numbersInCol >= playerBoard.getNumberToWin() - 1)) {
-            System.out.println("Jag hittade en row");
-            playerBoard.setBoardArrayElement(nextFreeRow, nextFreeCol, player.getMark());
-            return true;
-
-        }
-        return false;
-
+return false;
     }
 
     public boolean checkBestMoveDiagonally() {

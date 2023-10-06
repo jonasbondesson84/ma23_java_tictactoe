@@ -84,7 +84,7 @@ public class GameMode {
         //Players keeps playing until one has won or it is a draw
         for (Player player : players) {
             if (getGameMode().equalsIgnoreCase("single-player") && players.get(1) == player) { //If it is computers turn in single-player mode
-                winnerOrDraw = computer.computerTurn(playerBoard, computer.getDifficulty(), player, players);
+                winnerOrDraw = computer.computerTurn(playerBoard,  player, players);
             } else {
                 winnerOrDraw = player.playerTurn(playerBoard); //multiplayer mode
             }
