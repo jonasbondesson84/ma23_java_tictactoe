@@ -28,11 +28,12 @@ public class GameMode {
         System.out.println("Ange namnet på spelaren:");
 
         players.add(new Player(sc.nextLine(), 'x'));
-        System.out.println("Välkommen " + players.get(0).getName() + "! Du kommer spela mot Marvin.");
+
         players.add(new Player("Marvin", '0'));
 
         while (playAgain) {
-            computer.setDifficulty();
+            computer.setDifficulty(players.get(1));
+            System.out.println("Välkommen " + players.get(0).getName() + "! Du kommer spela mot " + players.get(1).getName() + ".");
             playerBoard.setBoardSize();  //Sets the board size with method
 
             winnerOrDraw = false; //resets before new game

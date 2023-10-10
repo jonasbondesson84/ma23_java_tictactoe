@@ -35,6 +35,10 @@ public class Player {
         this.lastMarkedCol = lastMarkedCol;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
@@ -79,35 +83,7 @@ public class Player {
         return playerBoard.checkIfWin(this); //Checks if someone has won.
     }
 
-//    public boolean computerTurn(Board playerBoard, int difficulty) {
-//
-//        System.out.println("\n" + getName() + ", din tur!");
-//        System.out.println("Du spelar med " + mark);
-//        if (difficulty == 1) {
-//            computerEasyAction(playerBoard);
-//        } else if (difficulty == 2) {
-//            computerHardAction(playerBoard);
-//        }
-//        return playerBoard.checkIfWin(this); //Checks if someone has won.
-//    }
-//
-//    public void computerEasyAction(Board playerBoard) {
-//        int rowIndex;
-//        int colIndex;
-//        do {
-//            rowIndex = rand.nextInt(0, playerBoard.getNumbersOfRows());
-//            colIndex = rand.nextInt(0, playerBoard.getNumbersOfRows());
-//        } while (!playerBoard.checkIfTileIsFree(rowIndex, colIndex));
-//        playerBoard.setBoardArrayElement(rowIndex, colIndex, mark);
-//        this.lastMarkedRow = rowIndex;
-//        this.lastMarkedCol = colIndex;
-//        playerBoard.printBoard();
-//
-//    }
-//    public void computerHardAction(Board playerBoard) {
-//        int rowIndex = 0;
-//        int colIndex = 0;
-//    }
+
 
     public void printPlayerScore() {
         System.out.println(name + " har " + numberOfWins + (numberOfWins == 1 ? " vinst" : " vinster"));
