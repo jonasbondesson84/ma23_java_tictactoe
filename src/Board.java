@@ -13,21 +13,27 @@ public class Board {
     public static int getNumbersOfDraw() {
         return numbersOfDraw;
     }
+
     public static void setNumbersOfDraw(int numbersOfDraw) {
         Board.numbersOfDraw = numbersOfDraw;
     }
+
     public int getNumberToWin() {
         return numberToWin;
     }
+
     public int getNumbersOfRows() {
         return numbersOfRows;
     }
+
     public char[][] getBoardArray() {
         return boardArray;
     }
+
     public char getBoardArrayElement(int rowIndex, int colIndex) {
         return this.boardArray[rowIndex][colIndex];
     }
+
     public void setBoardArrayElement(int rowIndex, int colIndex, char newValue) {
         this.boardArray[rowIndex][colIndex] = newValue;
     }
@@ -39,18 +45,20 @@ public class Board {
             }
         }
     }
-    public int getRow(char row) {
+
+    public int getRowNumberFromChar(char row) {
         return row - 96;
     }
+
     public void setBoardSize() {
         String checkString;
-        int numberOfRowsTiles;
+        int numberOfRows;
         while (true) {
             System.out.println("Hur många rutor (vertikalt) ska spelplanen ha");
             try {
                 checkString = sc.nextLine();
-                numberOfRowsTiles = Integer.parseInt(checkString);
-                if (numberOfRowsTiles >= 3 && numberOfRowsTiles <= 10) {
+                numberOfRows = Integer.parseInt(checkString);
+                if (numberOfRows >= 3 && numberOfRows <= 10) {
                     break;
                 }
                 System.out.println("Spelplanen måste ha minst 3x3 rutor och max 10x10.");
@@ -58,7 +66,7 @@ public class Board {
                 System.out.println("Fel input.");
             }
         }
-        this.numbersOfRows = numberOfRowsTiles;
+        this.numbersOfRows = numberOfRows;
         this.boardArray = new char[numbersOfRows][numbersOfRows];
         if (numbersOfRows <= 5) {
             this.numberToWin = numbersOfRows;
@@ -66,8 +74,9 @@ public class Board {
             this.numberToWin = 5;
         }
         System.out.println("Brädet kommer nu vara " + getNumbersOfRows() + "x" + getNumbersOfRows() + " rutor.");
-        System.out.println("Det krävs " + getNumberToWin() + " i rad för att vinna.");
+        System.out.println("Det krävs " + getNumberToWin() + " i rad för att vinna. \n");
     }
+
     public void printBoard() {
         System.out.println(printColumnNumbers());
         System.out.println(printBorder());
@@ -85,6 +94,7 @@ public class Board {
         }
         System.out.println(printBorder());
     }
+
     public String printBorder() {
         String border = "   ";
         for (int i = 1; i <= numbersOfRows; i++) {
@@ -92,6 +102,7 @@ public class Board {
         }
         return border;
     }
+
     public String printColumnNumbers() {
         String columnNumbers = "   ";
         for (int i = 1; i <= numbersOfRows; i++) {
@@ -99,24 +110,26 @@ public class Board {
         }
         return columnNumbers;
     }
+
     public boolean checkIfTileExists(String answer) {
         int rowIndex;
         int colIndex;
         while (true) {
             try {
-                rowIndex = getRow(answer.charAt(0)) - 1;
+                rowIndex = getRowNumberFromChar(answer.charAt(0)) - 1;
                 colIndex = Character.getNumericValue(answer.charAt(1)) - 1;
                 return (rowIndex < getNumbersOfRows() && colIndex < getNumbersOfRows() && rowIndex >= 0 && colIndex >= 0);
             } catch (Exception e) {
                 System.out.println("Fel input, försök igen.");
                 answer = sc.nextLine();
             }
-
         }
     }
+
     public boolean checkIfTileIsFree(int rowIndex, int colIndex) {
         return (getBoardArray()[rowIndex][colIndex] == ' ');
     }
+
     public boolean checkIfBoardIsFull() {
         for (int i = 0; i < numbersOfRows; i++) {
             for (int j = 0; j < numbersOfRows; j++) {
@@ -127,13 +140,15 @@ public class Board {
         }
         return true;
     }
-    public boolean checkIfWin( Player player) {
+
+    public boolean checkIfWin(Player player) {
         if (checkIfWinRow(player) || checkIfWinCol(player) || checkIfWinDiagonally(player)) {
             return true;
         }
         return false;
     }
-    public boolean checkIfWinCol( Player player) {
+
+    public boolean checkIfWinCol(Player player) {
         int numbersInCol = 1;
         int markRow = player.getLastMarkedRow() - 1;
         while (markRow >= 0 && getBoardArrayElement(markRow, player.getLastMarkedCol()) == player.getMark()) {
@@ -147,6 +162,7 @@ public class Board {
         }
         return (numbersInCol >= getNumberToWin());
     }
+
     public boolean checkIfWinRow(Player player) {
         int numbersInRow = 1;
         int markCol = player.getLastMarkedCol() - 1;
@@ -161,6 +177,7 @@ public class Board {
         }
         return (numbersInRow >= getNumberToWin());
     }
+
     public boolean checkIfWinDiagonally(Player player) {
         int numbersInDiagonally = 1;
         int markRow = player.getLastMarkedRow() - 1;

@@ -14,30 +14,39 @@ public class Player {
         this.numberOfWins = 0;
         this.mark = mark;
     }
+
     public char getMark() {
         return mark;
     }
+
     public int getLastMarkedRow() {
         return lastMarkedRow;
     }
+
     public void setLastMarkedRow(int lastMarkedRow) {
         this.lastMarkedRow = lastMarkedRow;
     }
+
     public int getLastMarkedCol() {
         return lastMarkedCol;
     }
+
     public void setLastMarkedCol(int lastMarkedCol) {
         this.lastMarkedCol = lastMarkedCol;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public String getName() {
         return name;
     }
+
     public int getNumberOfWins() {
         return numberOfWins;
     }
+
     public void setNumberOfWins(int numberOfWins) {
         this.numberOfWins = numberOfWins;
     }
@@ -55,7 +64,7 @@ public class Player {
                 System.out.println("Vilken ruta vill du markera (ex a1)?");
                 answer = sc.nextLine();
             } while (answer.length() != 2);
-            rowIndex = playerBoard.getRow(answer.charAt(0)) - 1;
+            rowIndex = playerBoard.getRowNumberFromChar(answer.charAt(0)) - 1;
             colIndex = Character.getNumericValue(answer.charAt(1)) - 1;
             if (playerBoard.checkIfTileExists(answer)) { //Checks if tile is within board
                 if (playerBoard.checkIfTileIsFree(rowIndex, colIndex)) { //checks if tile is free
@@ -71,8 +80,9 @@ public class Player {
             }
         }
         playerBoard.printBoard(); //Prints the board
-        return playerBoard.checkIfWin(this); //Checks if someone has won.
+        return playerBoard.checkIfWin(this); //Checks if this player has won.
     }
+
     public void printPlayerScore() {
         System.out.println(name + " har " + numberOfWins + (numberOfWins == 1 ? " vinst" : " vinster"));
     }

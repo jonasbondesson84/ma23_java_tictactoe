@@ -28,8 +28,7 @@ public class GameMode {
         System.out.println("Ange namnet på spelaren:");
 
         players.add(new Player(sc.nextLine(), 'x'));
-
-        players.add(new Player("Marvin", '0'));
+        players.add(new Player("", '0'));
 
         while (playAgain) {
             computer.setDifficulty(players.get(1));
@@ -40,15 +39,14 @@ public class GameMode {
             playerBoard.resetBoard();
 
             playerBoard.printBoard();
-
             while (!winnerOrDraw) { //Players keeps playing until one has won or it is a draw
                 winnerOrDraw = gameTurn(playerBoard, computer, players);
             }
-
             printScores(players);
             playAgain = askToPlayAgain();
         }
     }
+
     public void multiPlayer() {
 
         players.clear();
@@ -68,22 +66,21 @@ public class GameMode {
             playerBoard.resetBoard();
 
             playerBoard.printBoard();
-
             while (!winnerOrDraw) {  //Players keeps playing until one has won or it is a draw
-                winnerOrDraw = gameTurn(playerBoard, computer, players); //only uses difficulty in single player mode.
+                winnerOrDraw = gameTurn(playerBoard, computer, players); //only uses computer in single player mode.
             }
-
             printScores(players);
             playAgain = askToPlayAgain();
         }
     }
+
     public boolean gameTurn(Board playerBoard, Computer computer, ArrayList<Player> players) {
 
         boolean winnerOrDraw = false;
         //Players keeps playing until one has won or it is a draw
         for (Player player : players) {
             if (getGameMode().equalsIgnoreCase("single-player") && players.get(1) == player) { //If it is computers turn in single-player mode
-                winnerOrDraw = computer.computerTurn(playerBoard,  player, players);
+                winnerOrDraw = computer.computerTurn(playerBoard, player, players);
             } else {
                 winnerOrDraw = player.playerTurn(playerBoard); //multiplayer mode
             }
@@ -102,6 +99,7 @@ public class GameMode {
         return winnerOrDraw;
 
     }
+
     public boolean askToPlayAgain() {
         String answer;
         while (true) { //option to play again
@@ -114,6 +112,7 @@ public class GameMode {
             }
         }
     }
+
     public void printScores(ArrayList<Player> players) {
         for (Player player : players) {
             player.printPlayerScore();
