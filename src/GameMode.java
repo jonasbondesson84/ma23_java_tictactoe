@@ -49,8 +49,6 @@ public class GameMode {
             playAgain = askToPlayAgain();
         }
     }
-
-
     public void multiPlayer() {
 
         players.clear();
@@ -104,7 +102,6 @@ public class GameMode {
         return winnerOrDraw;
 
     }
-
     public boolean askToPlayAgain() {
         String answer;
         while (true) { //option to play again
@@ -117,14 +114,11 @@ public class GameMode {
             }
         }
     }
-
     public void printScores(ArrayList<Player> players) {
         for (Player player : players) {
             player.printPlayerScore();
         }
         System.out.println(Board.getNumbersOfDraw() + (Board.getNumbersOfDraw() == 1 ? " omgång blev oavgjord" : " omgångar blev oavgjorda"));
     }
-
-
 
 }

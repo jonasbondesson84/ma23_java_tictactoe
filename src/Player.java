@@ -14,39 +14,30 @@ public class Player {
         this.numberOfWins = 0;
         this.mark = mark;
     }
-
     public char getMark() {
         return mark;
     }
-
     public int getLastMarkedRow() {
         return lastMarkedRow;
     }
-
     public void setLastMarkedRow(int lastMarkedRow) {
         this.lastMarkedRow = lastMarkedRow;
     }
-
     public int getLastMarkedCol() {
         return lastMarkedCol;
     }
-
     public void setLastMarkedCol(int lastMarkedCol) {
         this.lastMarkedCol = lastMarkedCol;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public String getName() {
         return name;
     }
-
     public int getNumberOfWins() {
         return numberOfWins;
     }
-
     public void setNumberOfWins(int numberOfWins) {
         this.numberOfWins = numberOfWins;
     }
@@ -82,9 +73,6 @@ public class Player {
         playerBoard.printBoard(); //Prints the board
         return playerBoard.checkIfWin(this); //Checks if someone has won.
     }
-
-
-
     public void printPlayerScore() {
         System.out.println(name + " har " + numberOfWins + (numberOfWins == 1 ? " vinst" : " vinster"));
     }
