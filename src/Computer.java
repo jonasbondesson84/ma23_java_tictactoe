@@ -1,17 +1,15 @@
-import org.w3c.dom.ls.LSOutput;
-
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Computer {
-    private int difficulty;
+
     Random rand = new Random();
     Scanner sc = new Scanner(System.in);
-
-    private int addMarkRow;
-    private int addMarkCol;
-    private int numbersOfFree;
+    private int difficulty;
+    private int addMarkRowIndex;
+    private int addMarkColIndex;
+    private int numbersOfFreeInRow;
 
     private int NUMBER_TO_STOP_PLAYER = 0;
 
@@ -111,26 +109,25 @@ public class Computer {
 
     public boolean checkBestMoveRow(Player computer, Player player, Board playerBoard, int numberToCheck) {
 
-        this.addMarkRow = -1;
-        this.addMarkCol = -1;
-        this.numbersOfFree = 0;
+        this.addMarkRowIndex = -1;
+        this.addMarkColIndex = -1;
+        this.numbersOfFreeInRow = 0;
         int numbersInRow = 1;
 
-        int markRow = computer.getLastMarkedRow();
-        int markCol = computer.getLastMarkedCol() - 1;
-        while (markCol >= 0 && (playerBoard.getBoardArrayElement(markRow, markCol) != player.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, computer, numbersInRow);
-            markCol--;
+        int checkMarkRowIndex = computer.getLastMarkedRow();
+        int checkMarkColIndex = computer.getLastMarkedCol() - 1;
+        while (checkMarkColIndex >= 0 && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != player.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, computer, numbersInRow);
+            checkMarkColIndex--;
         }
 
-        markCol = computer.getLastMarkedCol() + 1;
-        while (markCol < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(markRow, markCol) != player.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, computer, numbersInRow);
-            markCol++;
+        checkMarkColIndex = computer.getLastMarkedCol() + 1;
+        while (checkMarkColIndex < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != player.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, computer, numbersInRow);
+            checkMarkColIndex++;
         }
-        if (numbersInRow >= Math.max(playerBoard.getNumberToWin() - numberToCheck, 2) && ((numbersInRow + numbersOfFree) >= playerBoard.getNumberToWin())) {
-            //  System.out.println("found mark col [" + addMarkRow + ";" + addMarkCol + "]");
-            playerBoard.setBoardArrayElement(addMarkRow, addMarkCol, computer.getMark());
+        if (numbersInRow >= Math.max(playerBoard.getNumberToWin() - numberToCheck, 2) && ((numbersInRow + numbersOfFreeInRow) >= playerBoard.getNumberToWin())) {
+            playerBoard.setBoardArrayElement(addMarkRowIndex, addMarkColIndex, computer.getMark());
             playerBoard.printBoard();
             return true;
         }
@@ -138,26 +135,25 @@ public class Computer {
     }
 
     public boolean checkBestMoveCol(Player computer, Player player, Board playerBoard, int numberToCheck) {
-        this.addMarkRow = -1;
-        this.addMarkCol = -1;
-        this.numbersOfFree = 0;
+        this.addMarkRowIndex = -1;
+        this.addMarkColIndex = -1;
+        this.numbersOfFreeInRow = 0;
         int numbersInRow = 1;
 
-        int markRow = computer.getLastMarkedRow() - 1;
-        int markCol = computer.getLastMarkedCol();
-        while (markRow >= 0 && (playerBoard.getBoardArrayElement(markRow, computer.getLastMarkedCol()) != player.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, computer, numbersInRow);
-            markRow--;
+        int checkMarkRowIndex = computer.getLastMarkedRow() - 1;
+        int checkMarkColIndex = computer.getLastMarkedCol();
+        while (checkMarkRowIndex >= 0 && (playerBoard.getBoardArrayElement(checkMarkRowIndex, computer.getLastMarkedCol()) != player.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, computer, numbersInRow);
+            checkMarkRowIndex--;
         }
 
-        markRow = computer.getLastMarkedRow() + 1;
-        while (markRow < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(markRow, markCol) != player.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, computer, numbersInRow);
-            markRow++;
+        checkMarkRowIndex = computer.getLastMarkedRow() + 1;
+        while (checkMarkRowIndex < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != player.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, computer, numbersInRow);
+            checkMarkRowIndex++;
         }
-        if (numbersInRow >= Math.max(playerBoard.getNumberToWin() - numberToCheck, 2) && ((numbersInRow + numbersOfFree) >= playerBoard.getNumberToWin())) {
-            //    System.out.println("found mark col [" + addMarkRow + ";" + addMarkCol + "]");
-            playerBoard.setBoardArrayElement(addMarkRow, addMarkCol, computer.getMark());
+        if (numbersInRow >= Math.max(playerBoard.getNumberToWin() - numberToCheck, 2) && ((numbersInRow + numbersOfFreeInRow) >= playerBoard.getNumberToWin())) {
+            playerBoard.setBoardArrayElement(addMarkRowIndex, addMarkColIndex, computer.getMark());
             playerBoard.printBoard();
             return true;
         }
@@ -166,57 +162,55 @@ public class Computer {
 
     public boolean checkBestMoveDiagonally(Player computer, Player player, Board playerBoard, int numberToCheck) {
 
-        this.addMarkRow = -1;
-        this.addMarkCol = -1;
-        this.numbersOfFree = 0;
+        this.addMarkRowIndex = -1;
+        this.addMarkColIndex = -1;
+        this.numbersOfFreeInRow = 0;
         int numbersInRow = 1;
 
-        int markRow = computer.getLastMarkedRow() - 1;
-        int markCol = computer.getLastMarkedCol() - 1;
-        while (markRow >= 0 && markCol >= 0 && (playerBoard.getBoardArrayElement(markRow, markCol) != player.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, computer, numbersInRow);
-            markRow--;
-            markCol--;
+        int checkMarkRowIndex = computer.getLastMarkedRow() - 1;
+        int checkMarkColIndex = computer.getLastMarkedCol() - 1;
+        while (checkMarkRowIndex >= 0 && checkMarkColIndex >= 0 && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != player.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, computer, numbersInRow);
+            checkMarkRowIndex--;
+            checkMarkColIndex--;
         }
 
-        markRow = computer.getLastMarkedRow() + 1;
-        markCol = computer.getLastMarkedCol() + 1;
-        while (markRow < playerBoard.getNumbersOfRows() && markCol < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(markRow, markCol) != player.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, computer, numbersInRow);
-            markRow++;
-            markCol++;
+        checkMarkRowIndex = computer.getLastMarkedRow() + 1;
+        checkMarkColIndex = computer.getLastMarkedCol() + 1;
+        while (checkMarkRowIndex < playerBoard.getNumbersOfRows() && checkMarkColIndex < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != player.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, computer, numbersInRow);
+            checkMarkRowIndex++;
+            checkMarkColIndex++;
         }
 
-        if (numbersInRow >= Math.max(playerBoard.getNumberToWin() - numberToCheck, 2) && ((numbersInRow + numbersOfFree) >= playerBoard.getNumberToWin())) {
-            //    System.out.println("found mark col [" + addMarkRow + ";" + addMarkCol + "]");
-            playerBoard.setBoardArrayElement(addMarkRow, addMarkCol, computer.getMark());
+        if (numbersInRow >= Math.max(playerBoard.getNumberToWin() - numberToCheck, 2) && ((numbersInRow + numbersOfFreeInRow) >= playerBoard.getNumberToWin())) {
+            playerBoard.setBoardArrayElement(addMarkRowIndex, addMarkColIndex, computer.getMark());
             playerBoard.printBoard();
             return true;
         } else {
-            this.addMarkRow = -1;
-            this.addMarkCol = -1;
-            this.numbersOfFree = 0;
+            this.addMarkRowIndex = -1;
+            this.addMarkColIndex = -1;
+            this.numbersOfFreeInRow = 0;
             numbersInRow = 1;
 
-            markRow = computer.getLastMarkedRow() - 1;
-            markCol = computer.getLastMarkedCol() + 1;
-            while (markRow >= 0 && markCol < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(markRow, markCol) != player.getMark())) {
-                numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, computer, numbersInRow);
-                markRow--;
-                markCol++;
+            checkMarkRowIndex = computer.getLastMarkedRow() - 1;
+            checkMarkColIndex = computer.getLastMarkedCol() + 1;
+            while (checkMarkRowIndex >= 0 && checkMarkColIndex < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != player.getMark())) {
+                numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, computer, numbersInRow);
+                checkMarkRowIndex--;
+                checkMarkColIndex++;
             }
 
-            markRow = computer.getLastMarkedRow() + 1;
-            markCol = computer.getLastMarkedCol() - 1;
-            while (markRow < playerBoard.getNumbersOfRows() && markCol >= 0 && (playerBoard.getBoardArrayElement(markRow, markCol) != player.getMark())) {
-                numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, computer, numbersInRow);
-                markRow++;
-                markCol--;
+            checkMarkRowIndex = computer.getLastMarkedRow() + 1;
+            checkMarkColIndex = computer.getLastMarkedCol() - 1;
+            while (checkMarkRowIndex < playerBoard.getNumbersOfRows() && checkMarkColIndex >= 0 && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != player.getMark())) {
+                numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, computer, numbersInRow);
+                checkMarkRowIndex++;
+                checkMarkColIndex--;
             }
 
-            if (numbersInRow >= Math.max(playerBoard.getNumberToWin() - numberToCheck, 2) && ((numbersInRow + numbersOfFree) >= playerBoard.getNumberToWin())) {
-                //    System.out.println("found mark col [" + addMarkRow + ";" + addMarkCol + "]");
-                playerBoard.setBoardArrayElement(addMarkRow, addMarkCol, computer.getMark());
+            if (numbersInRow >= Math.max(playerBoard.getNumberToWin() - numberToCheck, 2) && ((numbersInRow + numbersOfFreeInRow) >= playerBoard.getNumberToWin())) {
+                playerBoard.setBoardArrayElement(addMarkRowIndex, addMarkColIndex, computer.getMark());
                 playerBoard.printBoard();
                 return true;
             }
@@ -226,50 +220,50 @@ public class Computer {
 
     public boolean checkBestMoveToStopRow(Player player, Player computer, Board playerBoard, int numberToCheck) {
 
-        this.addMarkRow = -1;
-        this.addMarkCol = -1;
-        this.numbersOfFree = 0;
+        this.addMarkRowIndex = -1;
+        this.addMarkColIndex = -1;
+        this.numbersOfFreeInRow = 0;
         int numbersInRow = 1;
         NUMBER_TO_STOP_PLAYER = setNUMBER_TO_STOP_PLAYER(numberToCheck, playerBoard);
 
-        int markRow = player.getLastMarkedRow();
-        int markCol = player.getLastMarkedCol() - 1;
-        while (markCol >= 0 && (playerBoard.getBoardArrayElement(markRow, markCol) != computer.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, player, numbersInRow);
-            markCol--;
+        int checkMarkRowIndex = player.getLastMarkedRow();
+        int checkMarkColIndex = player.getLastMarkedCol() - 1;
+        while (checkMarkColIndex >= 0 && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != computer.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, player, numbersInRow);
+            checkMarkColIndex--;
         }
 
-        markCol = player.getLastMarkedCol() + 1;
-        while (markCol < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(markRow, markCol) != computer.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, player, numbersInRow);
-            markCol++;
+        checkMarkColIndex = player.getLastMarkedCol() + 1;
+        while (checkMarkColIndex < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != computer.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, player, numbersInRow);
+            checkMarkColIndex++;
         }
-        if(checkIfShouldMark(numbersInRow, numbersOfFree, playerBoard, addMarkRow, addMarkCol, computer, player, NUMBER_TO_STOP_PLAYER)) {
+        if(checkIfShouldMark(numbersInRow, numbersOfFreeInRow, playerBoard, computer, player, NUMBER_TO_STOP_PLAYER)) {
             return true;
         }
         return false;
     }
 
     public boolean checkBestMoveToStopCol(Player player, Player computer, Board playerBoard, int numberToCheck) {
-        this.addMarkRow = -1;
-        this.addMarkCol = -1;
-        this.numbersOfFree = 0;
+        this.addMarkRowIndex = -1;
+        this.addMarkColIndex = -1;
+        this.numbersOfFreeInRow = 0;
         int numbersInRow = 1;
-        int markRow = player.getLastMarkedRow() - 1;
-        int markCol = player.getLastMarkedCol();
+        int checkMarkRowIndex = player.getLastMarkedRow() - 1;
+        int checkMarkColIndex = player.getLastMarkedCol();
         NUMBER_TO_STOP_PLAYER = setNUMBER_TO_STOP_PLAYER(numberToCheck, playerBoard);
 
-        while (markRow >= 0 && (playerBoard.getBoardArrayElement(markRow, markCol) != computer.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, player, numbersInRow);
-            markRow--;
+        while (checkMarkRowIndex >= 0 && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != computer.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, player, numbersInRow);
+            checkMarkRowIndex--;
         }
 
-        markRow = player.getLastMarkedRow() + 1;
-        while (markRow < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(markRow, markCol) != computer.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, player, numbersInRow);
-            markRow++;
+        checkMarkRowIndex = player.getLastMarkedRow() + 1;
+        while (checkMarkRowIndex < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != computer.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, player, numbersInRow);
+            checkMarkRowIndex++;
         }
-        if(checkIfShouldMark(numbersInRow, numbersOfFree, playerBoard, addMarkRow, addMarkCol, computer, player, NUMBER_TO_STOP_PLAYER)) {
+        if(checkIfShouldMark(numbersInRow, numbersOfFreeInRow, playerBoard, addMarkRowIndex, addMarkColIndex, computer, player, NUMBER_TO_STOP_PLAYER)) {
             return true;
         }
         return false;
@@ -277,77 +271,76 @@ public class Computer {
 
     public boolean checkBestMoveToStopDiagonally(Player player, Player computer, Board playerBoard, int numberToCheck) {
 
-        this.addMarkRow = -1;
-        this.addMarkCol = -1;
-        this.numbersOfFree = 0;
+        this.addMarkRowIndex = -1;
+        this.addMarkColIndex = -1;
+        this.numbersOfFreeInRow = 0;
         int numbersInRow = 1;
-        int markRow = player.getLastMarkedRow() - 1;
-        int markCol = player.getLastMarkedCol() - 1;
+        int checkMarkRowIndex = player.getLastMarkedRow() - 1;
+        int checkMarkColIndex = player.getLastMarkedCol() - 1;
         NUMBER_TO_STOP_PLAYER = setNUMBER_TO_STOP_PLAYER(numberToCheck, playerBoard);
 
-        while (markRow >= 0 && markCol >= 0 && (playerBoard.getBoardArrayElement(markRow, markCol) != computer.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, player, numbersInRow);
-            markRow--;
-            markCol--;
+        while (checkMarkRowIndex >= 0 && checkMarkColIndex >= 0 && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != computer.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, player, numbersInRow);
+            checkMarkRowIndex--;
+            checkMarkColIndex--;
         }
 
-        markRow = player.getLastMarkedRow() + 1;
-        markCol = player.getLastMarkedCol() + 1;
-        while (markRow < playerBoard.getNumbersOfRows() && markCol < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(markRow, markCol) != computer.getMark())) {
-            numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, player, numbersInRow);
-            markRow++;
-            markCol++;
+        checkMarkRowIndex = player.getLastMarkedRow() + 1;
+        checkMarkColIndex = player.getLastMarkedCol() + 1;
+        while (checkMarkRowIndex < playerBoard.getNumbersOfRows() && checkMarkColIndex < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != computer.getMark())) {
+            numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, player, numbersInRow);
+            checkMarkRowIndex++;
+            checkMarkColIndex++;
         }
 
-        if(checkIfShouldMark(numbersInRow, numbersOfFree, playerBoard, addMarkRow, addMarkCol, computer, player, NUMBER_TO_STOP_PLAYER)) {
+        if(checkIfShouldMark(numbersInRow, numbersOfFreeInRow, playerBoard, addMarkRowIndex, addMarkColIndex, computer, player, NUMBER_TO_STOP_PLAYER)) {
             return true;
         } else {
-            this.addMarkRow = -1;
-            this.addMarkCol = -1;
-            this.numbersOfFree = 0;
+            this.addMarkRowIndex = -1;
+            this.addMarkColIndex = -1;
+            this.numbersOfFreeInRow = 0;
             numbersInRow = 1;
-            markRow = player.getLastMarkedRow() - 1;
-            markCol = player.getLastMarkedCol() + 1;
+            checkMarkRowIndex = player.getLastMarkedRow() - 1;
+            checkMarkColIndex = player.getLastMarkedCol() + 1;
 
-            while (markRow >= 0 && markCol < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(markRow, markCol) != computer.getMark())) {
-                numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, player, numbersInRow);
-                markRow--;
-                markCol++;
+            while (checkMarkRowIndex >= 0 && checkMarkColIndex < playerBoard.getNumbersOfRows() && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != computer.getMark())) {
+                numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, player, numbersInRow);
+                checkMarkRowIndex--;
+                checkMarkColIndex++;
             }
 
-            markRow = player.getLastMarkedRow() + 1;
-            markCol = player.getLastMarkedCol() - 1;
-            while (markRow < playerBoard.getNumbersOfRows() && markCol >= 0 && (playerBoard.getBoardArrayElement(markRow, markCol) != computer.getMark())) {
-                numbersInRow = checkNumbersInRow(playerBoard, markRow, markCol, player, numbersInRow);
-                markRow++;
-                markCol--;
+            checkMarkRowIndex = player.getLastMarkedRow() + 1;
+            checkMarkColIndex = player.getLastMarkedCol() - 1;
+            while (checkMarkRowIndex < playerBoard.getNumbersOfRows() && checkMarkColIndex >= 0 && (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) != computer.getMark())) {
+                numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, player, numbersInRow);
+                checkMarkRowIndex++;
+                checkMarkColIndex--;
             }
 
-            if(checkIfShouldMark(numbersInRow, numbersOfFree, playerBoard, addMarkRow, addMarkCol, computer, player, NUMBER_TO_STOP_PLAYER)) {
+            if(checkIfShouldMark(numbersInRow, numbersOfFreeInRow, playerBoard, addMarkRowIndex, addMarkColIndex, computer, player, NUMBER_TO_STOP_PLAYER)) {
                 return true;
             }
             return false;
         }
     }
 
-    public int checkNumbersInRow(Board playerBoard, int markRow, int markCol, Player computer, int numbersInRow) {
+    public int checkNumbersInRow(Board playerBoard, int checkMarkRowIndex, int checkMarkColIndex, Player computer, int numbersInRow) {
 
-        if (playerBoard.getBoardArrayElement(markRow, markCol) == computer.getMark()) {
+        if (playerBoard.getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) == computer.getMark()) {
             numbersInRow++;
         } else {
-            this.numbersOfFree++;
-            if (numbersOfFree == 1) { //sets the first free spot to set mark on
-                this.addMarkRow = markRow;
-                this.addMarkCol = markCol;
+            this.numbersOfFreeInRow++;
+            if (numbersOfFreeInRow == 1) { //sets the first free spot to set mark on
+                this.addMarkRowIndex = checkMarkRowIndex;
+                this.addMarkColIndex = checkMarkColIndex;
             }
         }
         return numbersInRow;
     }
 
-    public boolean checkIfShouldMark(int numbersInRow, int numbersOfFree, Board playerBoard, int addMarkRow, int addMarkCol, Player computer, Player player,int  NUMBERS_TO_STOP_PLAYER) {
+    public boolean checkIfShouldMark(int numbersInRow, int numbersOfFree, Board playerBoard, Player computer, Player player,int  NUMBERS_TO_STOP_PLAYER) {
         if (numbersInRow >= NUMBERS_TO_STOP_PLAYER && ((numbersInRow + numbersOfFree) >= playerBoard.getNumberToWin())) {
-            //    System.out.println("found mark col [" + addMarkRow + ";" + addMarkCol + "]");
-            playerBoard.setBoardArrayElement(addMarkRow, addMarkCol, computer.getMark());
+            playerBoard.setBoardArrayElement(addMarkRowIndex, addMarkColIndex, computer.getMark());
             playerBoard.printBoard();
             return true;
         } else {
