@@ -112,13 +112,13 @@ public class Board {
     }
 
     public boolean checkIfTileExists(String answer) {
-        int rowIndex;
-        int colIndex;
+        int checkRowIndex;
+        int checkColIndex;
         while (true) {
             try {
-                rowIndex = getRowNumberFromChar(answer.charAt(0)) - 1;
-                colIndex = Character.getNumericValue(answer.charAt(1)) - 1;
-                return (rowIndex < getNumbersOfRows() && colIndex < getNumbersOfRows() && rowIndex >= 0 && colIndex >= 0);
+                checkRowIndex = getRowNumberFromChar(answer.charAt(0)) - 1;
+                checkColIndex = Character.getNumericValue(answer.charAt(1)) - 1;
+                return (checkRowIndex < getNumbersOfRows() && checkColIndex < getNumbersOfRows() && checkRowIndex >= 0 && checkColIndex >= 0);
             } catch (Exception e) {
                 System.out.println("Fel input, försök igen.");
                 answer = sc.nextLine();
@@ -126,8 +126,8 @@ public class Board {
         }
     }
 
-    public boolean checkIfTileIsFree(int rowIndex, int colIndex) {
-        return (getBoardArray()[rowIndex][colIndex] == ' ');
+    public boolean checkIfTileIsFree(int checkRowIndex, int checkColIndex) {
+        return (getBoardArray()[checkRowIndex][checkColIndex] == ' ');
     }
 
     public boolean checkIfBoardIsFull() {
@@ -150,71 +150,74 @@ public class Board {
 
     public boolean checkIfWinCol(Player player) {
         int numbersInCol = 1;
-        int markRow = player.getLastMarkedRow() - 1;
-        while (markRow >= 0 && getBoardArrayElement(markRow, player.getLastMarkedCol()) == player.getMark()) {
+        int checkMarkRowIndex = player.getLastMarkedRow() - 1;
+        int checkMarkColIndex = player.getLastMarkedCol();
+        while (checkMarkRowIndex >= 0 && getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) == player.getMark()) {
             numbersInCol++;
-            markRow--;
+            checkMarkRowIndex--;
         }
-        markRow = player.getLastMarkedRow() + 1;
-        while (markRow < getNumbersOfRows() && getBoardArrayElement(markRow, player.getLastMarkedCol()) == player.getMark()) {
+        checkMarkRowIndex = player.getLastMarkedRow() + 1;
+        while (checkMarkRowIndex < getNumbersOfRows() && getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) == player.getMark()) {
             numbersInCol++;
-            markRow++;
+            checkMarkRowIndex++;
         }
         return (numbersInCol >= getNumberToWin());
     }
 
     public boolean checkIfWinRow(Player player) {
         int numbersInRow = 1;
-        int markCol = player.getLastMarkedCol() - 1;
-        while (markCol >= 0 && getBoardArrayElement(player.getLastMarkedRow(), markCol) == player.getMark()) {
+        int checkMarkColIndex = player.getLastMarkedCol() - 1;
+        int checkMarkRowIndex = player.getLastMarkedRow();
+
+        while (checkMarkColIndex >= 0 && getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) == player.getMark()) {
             numbersInRow++;
-            markCol--;
+            checkMarkColIndex--;
         }
-        markCol = player.getLastMarkedCol() + 1;
-        while (markCol < getNumbersOfRows() && getBoardArrayElement(player.getLastMarkedRow(), markCol) == player.getMark()) {
+        checkMarkColIndex = player.getLastMarkedCol() + 1;
+        while (checkMarkColIndex < getNumbersOfRows() && getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) == player.getMark()) {
             numbersInRow++;
-            markCol++;
+            checkMarkColIndex++;
         }
         return (numbersInRow >= getNumberToWin());
     }
 
     public boolean checkIfWinDiagonally(Player player) {
         int numbersInDiagonally = 1;
-        int markRow = player.getLastMarkedRow() - 1;
-        int markCol = player.getLastMarkedCol() - 1;
+        int checkMarkRowIndex = player.getLastMarkedRow() - 1;
+        int checkMarkColIndex = player.getLastMarkedCol() - 1;
         //Checks how many in a row you have to North West
-        while ((markRow >= 0 && markCol >= 0) && getBoardArrayElement(markRow, markCol) == player.getMark()) {
+        while ((checkMarkRowIndex >= 0 && checkMarkColIndex >= 0) && getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) == player.getMark()) {
             numbersInDiagonally++;
-            markRow--;
-            markCol--;
+            checkMarkRowIndex--;
+            checkMarkColIndex--;
         }
-        markRow = player.getLastMarkedRow() + 1;
-        markCol = player.getLastMarkedCol() + 1;
+        checkMarkRowIndex = player.getLastMarkedRow() + 1;
+        checkMarkColIndex = player.getLastMarkedCol() + 1;
         //checks how many in a row you have to South East
-        while ((markRow < getNumbersOfRows() && markCol < getNumbersOfRows()) && getBoardArrayElement(markRow, markCol) == player.getMark()) {
+        while ((checkMarkRowIndex < getNumbersOfRows() && checkMarkColIndex < getNumbersOfRows()) && getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) == player.getMark()) {
             numbersInDiagonally++;
-            markRow++;
-            markCol++;
+            checkMarkRowIndex++;
+            checkMarkColIndex++;
         }
         if (numbersInDiagonally >= getNumberToWin()) {
             return true;
         } else {
             numbersInDiagonally = 1;
-            markRow = player.getLastMarkedRow() - 1;
-            markCol = player.getLastMarkedCol() + 1;
+            checkMarkRowIndex = player.getLastMarkedRow() - 1;
+            checkMarkColIndex = player.getLastMarkedCol() + 1;
             //checks how man in a row you have to North East
-            while ((markRow >= 0 && markCol < getNumbersOfRows()) && getBoardArrayElement(markRow, markCol) == player.getMark()) {
+            while ((checkMarkRowIndex >= 0 && checkMarkColIndex < getNumbersOfRows()) && getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) == player.getMark()) {
                 numbersInDiagonally++;
-                markRow--;
-                markCol++;
+                checkMarkRowIndex--;
+                checkMarkColIndex++;
             }
-            markRow = player.getLastMarkedRow() + 1;
-            markCol = player.getLastMarkedCol() - 1;
+            checkMarkRowIndex = player.getLastMarkedRow() + 1;
+            checkMarkColIndex = player.getLastMarkedCol() - 1;
             //checks how many in a row you have to South West
-            while ((markRow < getNumbersOfRows() && markCol >= 0) && getBoardArrayElement(markRow, markCol) == player.getMark()) {
+            while ((checkMarkRowIndex < getNumbersOfRows() && checkMarkColIndex >= 0) && getBoardArrayElement(checkMarkRowIndex, checkMarkColIndex) == player.getMark()) {
                 numbersInDiagonally++;
-                markRow++;
-                markCol--;
+                checkMarkRowIndex++;
+                checkMarkColIndex--;
             }
         }
         return (numbersInDiagonally >= getNumberToWin());

@@ -53,8 +53,8 @@ public class Player {
 
     public boolean playerTurn(Board playerBoard) {
         String answer;
-        int rowIndex;
-        int colIndex;
+        int markRowIndex;
+        int markColIndex;
         boolean addedMark = false;
 
         System.out.println("\n" + getName() + ", din tur!");
@@ -64,13 +64,13 @@ public class Player {
                 System.out.println("Vilken ruta vill du markera (ex a1)?");
                 answer = sc.nextLine();
             } while (answer.length() != 2);
-            rowIndex = playerBoard.getRowNumberFromChar(answer.charAt(0)) - 1;
-            colIndex = Character.getNumericValue(answer.charAt(1)) - 1;
+            markRowIndex = playerBoard.getRowNumberFromChar(answer.charAt(0)) - 1;
+            markColIndex = Character.getNumericValue(answer.charAt(1)) - 1;
             if (playerBoard.checkIfTileExists(answer)) { //Checks if tile is within board
-                if (playerBoard.checkIfTileIsFree(rowIndex, colIndex)) { //checks if tile is free
-                    playerBoard.setBoardArrayElement(rowIndex, colIndex, mark);
-                    this.lastMarkedRow = rowIndex;
-                    this.lastMarkedCol = colIndex;
+                if (playerBoard.checkIfTileIsFree(markRowIndex, markColIndex)) { //checks if tile is free
+                    playerBoard.setBoardArrayElement(markRowIndex, markColIndex, mark);
+                    this.lastMarkedRow = markRowIndex;
+                    this.lastMarkedCol = markColIndex;
                     addedMark = true;
                 } else {
                     System.out.println("Rutan är tyvärr redan upptagen, försök igen.");
