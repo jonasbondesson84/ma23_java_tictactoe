@@ -263,7 +263,7 @@ public class Computer {
             numbersInRow = checkNumbersInRow(playerBoard, checkMarkRowIndex, checkMarkColIndex, player, numbersInRow);
             checkMarkRowIndex++;
         }
-        if(checkIfShouldMark(numbersInRow, numbersOfFreeInRow, playerBoard, addMarkRowIndex, addMarkColIndex, computer, player, NUMBER_TO_STOP_PLAYER)) {
+        if(checkIfShouldMark(numbersInRow, numbersOfFreeInRow, playerBoard, computer, player, NUMBER_TO_STOP_PLAYER)) {
             return true;
         }
         return false;
@@ -293,7 +293,7 @@ public class Computer {
             checkMarkColIndex++;
         }
 
-        if(checkIfShouldMark(numbersInRow, numbersOfFreeInRow, playerBoard, addMarkRowIndex, addMarkColIndex, computer, player, NUMBER_TO_STOP_PLAYER)) {
+        if(checkIfShouldMark(numbersInRow, numbersOfFreeInRow, playerBoard, computer, player, NUMBER_TO_STOP_PLAYER)) {
             return true;
         } else {
             this.addMarkRowIndex = -1;
@@ -317,7 +317,7 @@ public class Computer {
                 checkMarkColIndex--;
             }
 
-            if(checkIfShouldMark(numbersInRow, numbersOfFreeInRow, playerBoard, addMarkRowIndex, addMarkColIndex, computer, player, NUMBER_TO_STOP_PLAYER)) {
+            if(checkIfShouldMark(numbersInRow, numbersOfFreeInRow, playerBoard, computer, player, NUMBER_TO_STOP_PLAYER)) {
                 return true;
             }
             return false;
