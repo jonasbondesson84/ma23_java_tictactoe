@@ -18,6 +18,7 @@ public class GameMode {
 
     public void singlePlayer() {
 
+        String answer;
         players.clear();
         boolean winnerOrDraw;
         Board.setNumbersOfDraw(0);
@@ -26,8 +27,9 @@ public class GameMode {
 
         System.out.println("Välkommen till single player läget!");
         System.out.println("Ange namnet på spelaren:");
+        answer = sc.nextLine();
 
-        players.add(new Player(sc.nextLine(), 'x'));
+        players.add(new Player(checkNameInput(answer), 'x'));
         players.add(new Player("", '0'));
 
         while (playAgain) {
@@ -54,11 +56,19 @@ public class GameMode {
         boolean winnerOrDraw;
         boolean playAgain = true;
         Board playerBoard = new Board();
+        String answer;
 
         System.out.println("Ange namnet på den första spelaren:");
-        players.add(new Player(sc.nextLine(), 'x'));
+        answer=sc.nextLine();
+        while(answer.isEmpty()) {
+            System.out.println("Fel input, försök igen.");
+            answer = sc.nextLine();
+        }
+        players.add(new Player(checkNameInput(answer), 'x'));
         System.out.println("Ange namnet på den andra spelaren:");
-        players.add(new Player(sc.nextLine(), 'o'));
+        answer=sc.nextLine();
+
+        players.add(new Player(checkNameInput(answer), 'o'));
         while (playAgain) {
             playerBoard.setBoardSize();  //Sets the board size with method
 
@@ -72,6 +82,13 @@ public class GameMode {
             printScores(players);
             playAgain = askToPlayAgain();
         }
+    }
+    public String checkNameInput(String answer) {
+        while(answer.isEmpty()) {
+            System.out.println("Fel input, försök igen.");
+            answer = sc.nextLine();
+        }
+        return answer;
     }
 
     public boolean gameTurn(Board playerBoard, Computer computer, ArrayList<Player> players) {
