@@ -5,7 +5,6 @@ public class GameMode {
     private String GameMode;
     private ArrayList<Player> players = new ArrayList<>();
     private Computer computer = new Computer();
-
     Scanner sc = new Scanner(System.in);
 
     public void setGameMode(String gameMode) {
